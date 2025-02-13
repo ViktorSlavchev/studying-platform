@@ -10,7 +10,7 @@ const StyledAppLayout = styled.div`
 	display: grid;
 	grid-template-columns: 34rem 1fr;
 	grid-template-rows: auto 1fr;
-	height: 100vh;
+	max-height: 100vh;
 
 	@media (max-width: ${Breakpoints.xl}px) {
 		grid-template-columns: 32rem 1fr;
@@ -25,6 +25,8 @@ const StyledAppLayout = styled.div`
 
 const Main = styled.main`
 	padding: 4rem 4.8rem 2rem;
+	max-height: 100vh;
+	overflow: scroll;
 
 	@media (max-width: ${Breakpoints.xl}px) {
 		padding: 3.2rem 3.6rem 2rem;
