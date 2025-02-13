@@ -24,6 +24,11 @@ const Text = styled.p`
 			color: var(--color-text-dark);
 		`}
 
+		${(props) =>
+		css`
+			font-weight: ${props.weight || "normal"};
+		`}
+
 
 	line-height: 1.5;
 `;
