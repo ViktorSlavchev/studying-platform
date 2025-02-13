@@ -8,8 +8,8 @@ import Heading from "../ui/Heading";
 import QuestionHolder from "../features/exam/QuestionHolder";
 import Question from "../features/exam/Question";
 import Row from "../ui/Row";
-import InfoBox from "../ui/InfoBox";
 import Button from "../ui/Button";
+import TimeLeftBox from "../features/exam/TimeLeftBox";
 
 const RightColumn = styled.div`
 	display: flex;
@@ -17,6 +17,8 @@ const RightColumn = styled.div`
 	gap: 1.6rem;
 
 	align-self: flex-start;
+	position: sticky;
+	top: 2rem;
 `;
 
 function Exam() {
@@ -39,9 +41,7 @@ function Exam() {
 				</QuestionHolder>
 
 				<RightColumn>
-					<InfoBox>
-						<Heading>Хаха</Heading>
-					</InfoBox>
+					<TimeLeftBox />
 					<Button>Предай</Button>
 				</RightColumn>
 			</Row>

@@ -43,7 +43,7 @@ const StyledSpan = styled.span`
 				transform-origin: center;
 				stroke-dasharray: 126, 126;
 				stroke-dashoffset: 126;
-				animation: ${drawCircle} 0.5s ease-out forwards;
+				animation: ${drawCircle} 0.4s ease-out forwards;
 			}
 		`}
 `;
