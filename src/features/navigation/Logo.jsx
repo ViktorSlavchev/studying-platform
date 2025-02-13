@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import Heading from "./Heading";
+import Heading from "../../ui/Heading";
 
 const StyledLogo = styled.div`
 	text-align: center;

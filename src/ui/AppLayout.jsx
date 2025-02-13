@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import Header from "./Header";
-import Sidebar from "./Sidebar";
+import Header from "../features/header/Header";
+import Sidebar from "../features/navigation/Sidebar";
 import { Outlet } from "react-router";
 
 import Breakpoints from "../styles/breakpoints";

@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { HomeIcon, PhoneIcon, ClipboardDocumentListIcon, CheckCircleIcon, XCircleIcon, PuzzlePieceIcon, ChatBubbleLeftEllipsisIcon, QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 
 import NavElement from "./NavElement";
-import Row from "./Row";
+import Row from "../../ui/Row";
 
 const StyledNav = styled.nav`
 	display: flex;

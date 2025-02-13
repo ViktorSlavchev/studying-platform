@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Logo from "./Logo";
 import Nav from "./Nav";
-import Breakpoints from "../styles/breakpoints";
+import Breakpoints from "../../styles/breakpoints";
 
 const StyledSidebar = styled.aside`
 	display: flex;

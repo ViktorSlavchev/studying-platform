@@ -2,9 +2,9 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
 
-import IconWrapper from "./IconWrapper";
-import Row from "./Row";
-import Text from "./Text";
+import IconWrapper from "../../ui/IconWrapper";
+import Row from "../../ui/Row";
+import Text from "../../ui/Text";
 
 const StyledNavLink = styled(NavLink)`
 	&:link,

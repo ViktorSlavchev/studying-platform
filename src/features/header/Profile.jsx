@@ -2,9 +2,9 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-import Row from "./Row";
-import Text from "./Text";
-import IconWrapper from "./IconWrapper";
+import Row from "../../ui/Row";
+import Text from "../../ui/Text";
+import IconWrapper from "../../ui/IconWrapper";
 
 const StyledProfile = styled(Link)`
 	cursor: pointer;
