@@ -1,9 +1,11 @@
 import styled from "styled-components";
 
 import Heading from "../../ui/Heading";
+import { useNavigate } from "react-router";
 
 const StyledLogo = styled.div`
 	text-align: center;
+	cursor: pointer;
 `;
 
 const Img = styled.img`
@@ -12,8 +14,10 @@ const Img = styled.img`
 `;
 
 function Logo() {
+	const navigate = useNavigate();
+
 	return (
-		<StyledLogo>
+		<StyledLogo onClick={() => navigate("/home")}>
 			<Img src="/src/assets/logo.png" alt="Logo" />
 			<Heading as="h1" textalign="center">
 				НВО
