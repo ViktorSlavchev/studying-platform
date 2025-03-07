@@ -7,6 +7,7 @@ const Row = styled.div`
 	align-items: ${(props) => props.align || "center"};
 	gap: ${(props) => props.gap || "1.5rem"};
 	flex-grow: ${(props) => props.grow || 0};
+	align-self: ${(props) => props.alignself || "auto"};
 `;
 
 export default Row;

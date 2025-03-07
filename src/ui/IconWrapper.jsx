@@ -35,6 +35,14 @@ const IconWrapper = styled.span`
 			width: var(--icon-sz-lg);
 			height: var(--icon-sz-lg);
 		`}
+
+	${({ color }) =>
+		color &&
+		css`
+			color: ${color};
+			stroke: ${color};
+			fill: ${color};
+		`}
 `;
 
 export default IconWrapper;

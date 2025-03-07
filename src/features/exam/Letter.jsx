@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import styled, { keyframes, css } from "styled-components";
 
-import CircleSVG from "./CircleSVG";
+import CircleSVG from "../../assets/svgs/CircleSVG";
 
 const letters = ["А", "Б", "В", "Г", "Д", "Е", "Ж", "З", "И", "К", "Л"];
 
