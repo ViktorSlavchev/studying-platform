@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 const primaryStyles = css`
 	background-color: var(--color-brand);
 	color: var(--color-text-light);
-	padding: 1.2rem 3.6rem;
+	padding: 1rem 3.2rem;
 
 	font-weight: bold;
 	border: none;

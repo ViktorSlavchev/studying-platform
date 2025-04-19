@@ -78,12 +78,13 @@ function Header({ children }) {
 
 Row.propTypes = {
 	children: PropTypes.node.isRequired,
+	selected: PropTypes.bool,
 };
 
-function Row({ children }) {
+function Row({ children, selected }) {
 	const { columns } = useContext(TableContext);
 	return (
-		<StyledRow role="row" columns={columns}>
+		<StyledRow role="row" columns={columns} selected={selected}>
 			{children}
 		</StyledRow>
 	);
