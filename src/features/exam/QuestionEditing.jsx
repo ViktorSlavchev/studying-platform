@@ -6,10 +6,13 @@ import Text from "../../ui/Text";
 import Row from "../../ui/Row";
 import IconWrapper from "../../ui/IconWrapper";
 import Input from "../../ui/Input";
+import Button from "../../ui/Button";
 
 import InsertLetterSVG from "../../assets/svgs/InsertLetterSVG";
 import ReplaceSVG from "../../assets/svgs/ReplaceSVG";
 import RemoveSVG from "../../assets/svgs/RemoveSVG";
+
+import { ArrowUturnLeftIcon, CheckIcon } from "@heroicons/react/24/outline";
 
 const ActionWrapper = styled(IconWrapper)`
 	padding: 0.8rem;
@@ -27,12 +30,14 @@ const StyledEditing = styled.div`
 	justify-content: center;
 	gap: 1.8rem;
 	margin-top: 1.8rem;
+	user-select: none;
 `;
 
 const StyledSpan = styled.span`
 	color: var(--color-text-dark);
 	${({ removed }) => removed && "text-decoration: line-through; color: red;"}
 	${({ added }) => added && "color: var(--color-brand);"}
+	cursor: pointer;
 `;
 
 function QuestionEditing({ question }) {
@@ -48,31 +53,150 @@ function QuestionEditing({ question }) {
 
 	const [mode, setMode] = useState(null);
 	const [awaitingLetter, setAwaitingLetter] = useState(null);
+	const [inputValue, setInputValue] = useState("");
+	const [history, setHistory] = useState([]);
+
+	const exportText = () => {
+		let result = "";
+		text.forEach((letter) => {
+			if (letter.state !== "removed") {
+				result += letter.value;
+			}
+		});
+
+		// Optional: Clean up consecutive spaces like in the JS version
+		return result.replace(/  +/g, " ");
+	};
+
+	console.log(exportText());
+
+	const saveToHistory = () => {
+		setHistory((prevHistory) => [...prevHistory, JSON.stringify(text)]);
+	};
+
+	const handleUndo = () => {
+		if (history.length === 0) return;
+
+		// Get the last state from history
+		const lastState = history[history.length - 1];
+
+		// Update text to previous state
+		setText(JSON.parse(lastState));
+
+		// Remove the last state from history
+		setHistory((prev) => prev.slice(0, -1));
+
+		// Clear input state if active
+		if (awaitingLetter !== null) {
+			setAwaitingLetter(null);
+			setInputValue("");
+		}
+	};
 
 	const handleLetterClick = (index) => {
-		if (mode === "remove") {
-			setText((prevText) => {
-				return prevText
-					.map((letter, i) => {
-						if (i !== index) return letter;
+		if (mode != "insert") saveToHistory();
 
-						if (letter.state === "removed") {
-							return { ...letter, state: "normal" };
-						} else if (letter.state === "added") {
-							return null;
-						} else {
-							return { ...letter, state: "removed" };
-						}
-					})
-					.filter((x) => x);
-			});
-			return;
+		// Handle removal mode
+		if (mode === "remove") {
+			const nextText = text
+				.map((letter, i) => {
+					if (i !== index) return letter;
+
+					if (letter.state === "removed") {
+						return { ...letter, state: "normal" };
+					} else if (letter.state === "added") {
+						return null;
+					} else if (letter.value !== " ") {
+						return { ...letter, state: "removed" };
+					}
+
+					return { ...letter };
+				})
+				.filter((x) => x);
+
+			if (exportText().split(" ").length !== question.text.split(" ").length) {
+				return;
+			}
+			return setText(nextText);
 		}
 
+		// Handle insert mode
 		if (mode === "insert") {
 			setAwaitingLetter(index);
 			return;
 		}
+
+		// Handle replace mode
+		if (mode === "replace") {
+			let removingSpace = false;
+
+			const nextText = text
+				.map((letter, i) => {
+					if (i !== index) return letter;
+
+					if (letter.state === "removed") {
+						return { ...letter, state: "normal" };
+					} else if (letter.state === "added") {
+						return null;
+					} else if (letter.value !== " ") {
+						return { ...letter, state: "removed" };
+					}
+
+					removingSpace = true;
+					return { ...letter };
+				})
+				.filter((x) => x);
+
+			if (exportText().split(" ").length !== question.text.split(" ").length || removingSpace) {
+				return;
+			}
+
+			setText(nextText);
+			setAwaitingLetter(index);
+			return;
+		}
+	};
+
+	const handleInputChange = (e) => {
+		setInputValue(e.target.value);
+	};
+
+	const handleInputKeyDown = (e) => {
+		if (e.key === "Enter" && inputValue.length > 0) {
+			insertLetter();
+		}
+	};
+
+	const insertLetter = () => {
+		if (awaitingLetter === null || inputValue.length === 0) return;
+
+		saveToHistory();
+
+		setText((prevText) => {
+			const newText = [...prevText];
+			const letterToInsert = {
+				value: inputValue.replaceAll(" ", "*"),
+				state: "added",
+				visable: inputValue.replaceAll("*", "\u00A0"),
+			};
+
+			// Find the actual position to insert the new letter
+			// We need to find the last non-removed letter before or at awaitingLetter index
+			let insertIndex = awaitingLetter;
+
+			// Insert after the selected character
+			insertIndex = insertIndex + 1;
+
+			newText.splice(insertIndex, 0, letterToInsert);
+			return newText;
+		});
+
+		setInputValue("");
+		setAwaitingLetter(null);
+	};
+
+	const handleSubmitLetter = () => {
+		insertLetter();
 	};
 
 	return (
@@ -80,26 +204,62 @@ function QuestionEditing({ question }) {
 			<Text>Поправете допуснатите {question.mistakesCnt} грешки в текста: </Text>
 			<Text>
 				{text.map((txt, ind) => (
-					<StyledSpan key={ind} removed={txt.state === "removed"} added={txt.state === "added"} onClick={() => handleLetterClick(ind)}>
+					<StyledSpan key={ind} removed={txt.state === "removed" ? true.toString() : undefined} added={txt.state === "added" ? true.toString() : undefined} onClick={() => handleLetterClick(ind)}>
 						{txt.visable}
 					</StyledSpan>
 				))}
 			</Text>
 			<Row gap="1.2rem" align="center" justify="center" alignself="center">
-				<ActionWrapper color={mode === "insert" ? "var(--color-brand)" : "var(--color-text-dark)"} sz="lg" onClick={() => setMode("insert")} selected={mode === "insert"}>
+				<ActionWrapper color="var(--color-text-dark)" sz="lg" onClick={handleUndo} disabled={history.length === 0} style={{ opacity: history.length === 0 ? 0.5 : 1 }}>
+					<ArrowUturnLeftIcon />
+				</ActionWrapper>
+
+				<ActionWrapper
+					color={mode === "insert" ? "var(--color-brand)" : "var(--color-text-dark)"}
+					sz="lg"
+					onClick={() => {
+						setMode("insert");
+						setInputValue("");
+						setAwaitingLetter(null);
+					}}
+					selected={mode === "insert"}
+				>
 					<InsertLetterSVG />
 				</ActionWrapper>
-				<ActionWrapper color={mode === "replace" ? "var(--color-brand)" : "var(--color-text-dark)"} sz="lg" onClick={() => setMode("replace")} selected={mode === "replace"}>
+				<ActionWrapper
+					color={mode === "replace" ? "var(--color-brand)" : "var(--color-text-dark)"}
+					sz="lg"
+					onClick={() => {
+						setMode("replace");
+						setInputValue("");
+						setAwaitingLetter(null);
+					}}
+					selected={mode === "replace"}
+				>
 					<ReplaceSVG />
 				</ActionWrapper>
-				<ActionWrapper color={mode === "remove" ? "var(--color-brand)" : "var(--color-text-dark)"} sz="lg" onClick={() => setMode("remove")} selected={mode === "remove"}>
+				<ActionWrapper
+					color={mode === "remove" ? "var(--color-brand)" : "var(--color-text-dark)"}
+					sz="lg"
+					onClick={() => {
+						setMode("remove");
+						setInputValue("");
+						setAwaitingLetter(null);
+					}}
+					selected={mode === "remove"}
+				>
 					<RemoveSVG />
 				</ActionWrapper>
 			</Row>
 
-			{awaitingLetter && (
-				<Row align="center" justify="center" alignself="center">
-					<Input />
+			{awaitingLetter !== null && (
+				<Row align="center" justify="center" alignself="center" gap="1rem">
+					<Input value={inputValue} onChange={handleInputChange} onKeyDown={handleInputKeyDown} autoFocus placeholder="Въведете буква" maxLength={1} />
+					<Button onClick={handleSubmitLetter} type="circle">
+						<IconWrapper>
+							<CheckIcon />
+						</IconWrapper>
+					</Button>
 				</Row>
 			)}
 		</StyledEditing>
