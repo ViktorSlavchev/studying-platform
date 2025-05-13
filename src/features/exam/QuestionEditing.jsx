@@ -56,9 +56,9 @@ function QuestionEditing({ question }) {
 	const [inputValue, setInputValue] = useState("");
 	const [history, setHistory] = useState([]);
 
-	const exportText = () => {
+	const exportText = (txt = text) => {
 		let result = "";
-		text.forEach((letter) => {
+		txt.forEach((letter) => {
 			if (letter.state !== "removed") {
 				result += letter.value;
 			}
@@ -67,8 +67,6 @@ function QuestionEditing({ question }) {
 		// Optional: Clean up consecutive spaces like in the JS version
 		return result.replace(/  +/g, " ");
 	};
-
-	console.log(exportText());
 
 	const saveToHistory = () => {
 		setHistory((prevHistory) => [...prevHistory, JSON.stringify(text)]);
@@ -114,7 +112,7 @@ function QuestionEditing({ question }) {
 				})
 				.filter((x) => x);
 
-			if (exportText().split(" ").length !== question.text.split(" ").length) {
+			if (exportText(nextText).split(" ").length !== question.text.split(" ").length) {
 				return;
 			}
 			return setText(nextText);
@@ -147,7 +145,7 @@ function QuestionEditing({ question }) {
 				})
 				.filter((x) => x);
 
-			if (exportText().split(" ").length !== question.text.split(" ").length || removingSpace) {
+			if (exportText(nextText).split(" ").length !== question.text.split(" ").length || removingSpace) {
 				return;
 			}
 
