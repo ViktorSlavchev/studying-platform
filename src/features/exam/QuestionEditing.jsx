@@ -7,6 +7,7 @@ import Row from "../../ui/Row";
 import IconWrapper from "../../ui/IconWrapper";
 import Input from "../../ui/Input";
 import Button from "../../ui/Button";
+import Notification from "../../ui/Notification";
 
 import InsertLetterSVG from "../../assets/svgs/InsertLetterSVG";
 import ReplaceSVG from "../../assets/svgs/ReplaceSVG";
@@ -35,9 +36,35 @@ const StyledEditing = styled.div`
 
 const StyledSpan = styled.span`
 	color: var(--color-text-dark);
+	cursor: pointer;
+	position: relative;
+
 	${({ removed }) => removed && "text-decoration: line-through; color: red;"}
 	${({ added }) => added && "color: var(--color-brand);"}
-	cursor: pointer;
+
+	${({ hovermode }) =>
+		hovermode === "replace" || hovermode === "remove"
+			? `&:hover {
+				text-decoration: line-through;
+				color: red;
+			}`
+			: ""}
+
+	${({ hovermode }) =>
+		hovermode === "insert"
+			? `&:hover::after {
+				content: "∨";
+				position: absolute;
+				top: 0%;
+				left: 100%;
+				transform: translateX(-20%);
+				font-size: 1rem;
+				color: var(--color-brand);
+			   }
+			   &:hover {
+				margin-right: 0.4rem;
+			   }`
+			: ""}
 `;
 
 function QuestionEditing({ question }) {
@@ -55,6 +82,10 @@ function QuestionEditing({ question }) {
 	const [awaitingLetter, setAwaitingLetter] = useState(null);
 	const [inputValue, setInputValue] = useState("");
 	const [history, setHistory] = useState([]);
+
+	const [hoveredIndex, setHoveredIndex] = useState(null);
+
+	const [notificationMessage, setNotificationMessage] = useState(null);
 
 	const exportText = (txt = text) => {
 		let result = "";
@@ -113,6 +144,7 @@ function QuestionEditing({ question }) {
 				.filter((x) => x);
 
 			if (exportText(nextText).split(" ").length !== question.text.split(" ").length) {
+				setNotificationMessage("Не може да премахвате цели думи.");
 				return;
 			}
 			return setText(nextText);
@@ -146,6 +178,7 @@ function QuestionEditing({ question }) {
 				.filter((x) => x);
 
 			if (exportText(nextText).split(" ").length !== question.text.split(" ").length || removingSpace) {
+				setNotificationMessage("Не може да премахвате цели думи.");
 				return;
 			}
 
@@ -167,6 +200,7 @@ function QuestionEditing({ question }) {
 
 	const insertLetter = () => {
 		if (awaitingLetter === null || inputValue.length === 0) return;
+		if (hoveredIndex === -1) return;
 
 		saveToHistory();
 
@@ -198,69 +232,78 @@ function QuestionEditing({ question }) {
 	};
 
 	return (
-		<StyledEditing>
-			<Text>Поправете допуснатите {question.mistakesCnt} грешки в текста: </Text>
-			<Text>
-				{text.map((txt, ind) => (
-					<StyledSpan key={ind} removed={txt.state === "removed" ? true.toString() : undefined} added={txt.state === "added" ? true.toString() : undefined} onClick={() => handleLetterClick(ind)}>
-						{txt.visable}
-					</StyledSpan>
-				))}
-			</Text>
-			<Row gap="1.2rem" align="center" justify="center" alignself="center">
-				<ActionWrapper color="var(--color-text-dark)" sz="lg" onClick={handleUndo} disabled={history.length === 0} style={{ opacity: history.length === 0 ? 0.5 : 1 }}>
-					<ArrowUturnLeftIcon />
-				</ActionWrapper>
+		<>
+			{notificationMessage && <Notification message={notificationMessage} onDone={() => setNotificationMessage(null)} />}
+			<StyledEditing>
+				<Text>Поправете допуснатите {question.mistakesCnt} грешки в текста: </Text>
+				<Text>
+					{text.map((txt, ind) => {
+						if (txt.state === "removed" && (txt.value === "*" || txt.value === "-")) {
+							return null;
+						}
 
-				<ActionWrapper
-					color={mode === "insert" ? "var(--color-brand)" : "var(--color-text-dark)"}
-					sz="lg"
-					onClick={() => {
-						setMode("insert");
-						setInputValue("");
-						setAwaitingLetter(null);
-					}}
-					selected={mode === "insert"}
-				>
-					<InsertLetterSVG />
-				</ActionWrapper>
-				<ActionWrapper
-					color={mode === "replace" ? "var(--color-brand)" : "var(--color-text-dark)"}
-					sz="lg"
-					onClick={() => {
-						setMode("replace");
-						setInputValue("");
-						setAwaitingLetter(null);
-					}}
-					selected={mode === "replace"}
-				>
-					<ReplaceSVG />
-				</ActionWrapper>
-				<ActionWrapper
-					color={mode === "remove" ? "var(--color-brand)" : "var(--color-text-dark)"}
-					sz="lg"
-					onClick={() => {
-						setMode("remove");
-						setInputValue("");
-						setAwaitingLetter(null);
-					}}
-					selected={mode === "remove"}
-				>
-					<RemoveSVG />
-				</ActionWrapper>
-			</Row>
+						return (
+							<StyledSpan key={ind} removed={txt.state === "removed" ? true.toString() : undefined} added={txt.state === "added" ? true.toString() : undefined} hovermode={mode} onMouseEnter={() => setHoveredIndex(ind)} onMouseLeave={() => setHoveredIndex(null)} onClick={() => handleLetterClick(ind)}>
+								{txt.visable}
+							</StyledSpan>
+						);
+					})}
+				</Text>
+				<Row gap="1.2rem" align="center" justify="center" alignself="center">
+					<ActionWrapper color="var(--color-text-dark)" sz="lg" onClick={handleUndo} disabled={history.length === 0} style={{ opacity: history.length === 0 ? 0.5 : 1 }}>
+						<ArrowUturnLeftIcon />
+					</ActionWrapper>
 
-			{awaitingLetter !== null && (
-				<Row align="center" justify="center" alignself="center" gap="1rem">
-					<Input value={inputValue} onChange={handleInputChange} onKeyDown={handleInputKeyDown} autoFocus placeholder="Въведете буква" maxLength={1} />
-					<Button onClick={handleSubmitLetter} type="circle">
-						<IconWrapper>
-							<CheckIcon />
-						</IconWrapper>
-					</Button>
+					<ActionWrapper
+						color={mode === "insert" ? "var(--color-brand)" : "var(--color-text-dark)"}
+						sz="lg"
+						onClick={() => {
+							setMode("insert");
+							setInputValue("");
+							setAwaitingLetter(null);
+						}}
+						selected={mode === "insert"}
+					>
+						<InsertLetterSVG />
+					</ActionWrapper>
+					<ActionWrapper
+						color={mode === "replace" ? "var(--color-brand)" : "var(--color-text-dark)"}
+						sz="lg"
+						onClick={() => {
+							setMode("replace");
+							setInputValue("");
+							setAwaitingLetter(null);
+						}}
+						selected={mode === "replace"}
+					>
+						<ReplaceSVG />
+					</ActionWrapper>
+					<ActionWrapper
+						color={mode === "remove" ? "var(--color-brand)" : "var(--color-text-dark)"}
+						sz="lg"
+						onClick={() => {
+							setMode("remove");
+							setInputValue("");
+							setAwaitingLetter(null);
+						}}
+						selected={mode === "remove"}
+					>
+						<RemoveSVG />
+					</ActionWrapper>
 				</Row>
-			)}
-		</StyledEditing>
+
+				{awaitingLetter !== null && (
+					<Row align="center" justify="center" alignself="center" gap="1rem">
+						<Input value={inputValue} onChange={handleInputChange} onKeyDown={handleInputKeyDown} autoFocus placeholder="Въведете буква" maxLength={1} />
+						<Button onClick={handleSubmitLetter} type="circle">
+							<IconWrapper>
+								<CheckIcon />
+							</IconWrapper>
+						</Button>
+					</Row>
+				)}
+			</StyledEditing>
+		</>
 	);
 }
 
