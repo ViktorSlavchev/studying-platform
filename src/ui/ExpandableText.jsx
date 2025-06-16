@@ -7,7 +7,7 @@ const ExpandableTextWrapper = styled.div`
 	position: relative;
 `;
 
-const SeeMoreButton = styled(Text)`
+const SeeMoreButton = styled.span`
 	color: var(--color-brand);
 	cursor: pointer;
 	display: inline;
