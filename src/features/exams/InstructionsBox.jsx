@@ -16,32 +16,32 @@ function InstructionsBox() {
 	return (
 		<InfoBox>
 			<HeadingHolder>
-				<Heading as="h2" textalign="center">
+				<Heading as="h2" $textalign="center">
 					Формат
 				</Heading>
 			</HeadingHolder>
 			<HeadingHolder>
 				<Text>
 					Време:{" "}
-					<Text textstyle="italic" as="span">
+					<Text $textstyle="italic" as="span">
 						60 мин
 					</Text>
 				</Text>
 				<Text>
 					Брой задачи:{" "}
-					<Text textstyle="italic" as="span">
+					<Text $textstyle="italic" as="span">
 						25
 					</Text>
 				</Text>
 				<Text>
 					Включени произведения:{" "}
-					<Text textstyle="italic" as="span">
+					<Text $textstyle="italic" as="span">
 						от 5 клас, от 6 клас, от 7 клас - до Опълченците на Шипка
 					</Text>
 				</Text>
 			</HeadingHolder>
 			<Center>
-				<SLink to="/settings" align="center">
+				<SLink to="/settings" $align="center">
 					<span>Промени произведенията </span>
 					<IconWrapper inheritsize={"true"}>
 						<ChevronRightIcon />

@@ -246,11 +246,10 @@ function QuestionEditing({ question }) {
 						);
 					})}
 				</Text>
-				<Row gap="1.2rem" align="center" justify="center" alignself="center">
+				<Row $gap="1.2rem" $align="center" $justify="center" $alignself="center">
 					<ActionWrapper color="var(--color-text-dark)" sz="lg" onClick={handleUndo} disabled={history.length === 0} style={{ opacity: history.length === 0 ? 0.5 : 1 }}>
 						<ArrowUturnLeftIcon />
 					</ActionWrapper>
-
 					<ActionWrapper
 						color={mode === "insert" ? "var(--color-brand)" : "var(--color-text-dark)"}
 						sz="lg"
@@ -288,9 +287,8 @@ function QuestionEditing({ question }) {
 						<RemoveSVG />
 					</ActionWrapper>
 				</Row>
-
 				{awaitingLetter !== null && (
-					<Row align="center" justify="center" alignself="center" gap="1rem">
+					<Row $align="center" $justify="center" $alignself="center" $gap="1rem">
 						<Input value={inputValue} onChange={handleInputChange} onKeyDown={handleInputKeyDown} autoFocus placeholder="Въведете буква" maxLength={1} />
 						<Button onClick={handleSubmitLetter} type="circle">
 							<IconWrapper>

@@ -33,7 +33,7 @@ function Exam() {
 	return (
 		<>
 			<Heading>Изпит #{id}</Heading>
-			<Row gap="3.2rem">
+			<Row $gap="3.2rem">
 				<QuestionHolder>
 					{questions.map((question, ind) => (
 						<Question key={question["_id"]} question={question} num={ind + 1} />

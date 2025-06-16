@@ -43,7 +43,7 @@ function AppLayout() {
 			<Header />
 			<Sidebar />
 			<Main>
-				<Row gap="2.6rem" direction="column" align="flex-start">
+				<Row $gap="2.6rem" $direction="column" $align="flex-start">
 					<Outlet />
 				</Row>
 			</Main>

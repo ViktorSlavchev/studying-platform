@@ -36,7 +36,7 @@ function TableComments() {
 			<Table.Body
 				data={dummyTheses}
 				render={(thesis) => (
-					<Table.Row key={thesis.id} selected={thesis.selected}>
+					<Table.Row key={thesis.id} $selected={thesis.selected}>
 						<div>{thesis.quote}</div>
 						<ExpandableText>{thesis.thesis}</ExpandableText>
 						<Center>{thesis.score}</Center>

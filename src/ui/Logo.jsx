@@ -19,7 +19,7 @@ function Logo() {
 	return (
 		<StyledLogo onClick={() => navigate("/home")}>
 			<Img src="/src/assets/logo.png" alt="Logo" />
-			<Heading as="h1" textalign="center">
+			<Heading as="h1" $textalign="center">
 				НВО
 			</Heading>
 		</StyledLogo>

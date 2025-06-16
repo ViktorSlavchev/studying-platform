@@ -41,9 +41,9 @@ const StyledTextarea = styled(Textarea)`
 
 function CommentForm() {
 	return (
-		<Row style={{ width: "100%" }} align="flex-start" justify="space-between" gap="4.8rem">
-			<Row direction="column" gap="1.6rem" align="center" style={{ flex: 1 }}>
-				<Row gap="1.6rem" style={{ width: "100%" }}>
+		<Row style={{ width: "100%" }} $align="flex-start" $justify="space-between" $gap="4.8rem">
+			<Row $direction="column" $gap="1.6rem" $align="center" style={{ flex: 1 }}>
+				<Row $gap="1.6rem" style={{ width: "100%" }}>
 					<StyledInput placeholder="Напишете цитатът тук" />
 					<Dropdown style={{ maxWidth: "35%" }}>
 						{options.map((option, index) => (
@@ -56,15 +56,15 @@ function CommentForm() {
 				<StyledTextarea placeholder="Напишете тезата си тук" />
 				<Button>Провери</Button>
 			</Row>
-			<Row style={{ flex: 1 }} direction="column" align="flex-start" gap="0.4rem">
+			<Row style={{ flex: 1 }} $direction="column" $align="flex-start" $gap="0.4rem">
 				<Text>
-					<Text as="span" weight="bold">
+					<Text as="span" $weight="bold">
 						Оценка:
 					</Text>{" "}
 					5 / 6
 				</Text>
 				<Text>
-					<Text as="span" weight="bold">
+					<Text as="span" $weight="bold">
 						Коментар:
 					</Text>{" "}
 					Тезата е логически изградена и вярно тълкува смисъла на цитата. Добре се открояват идейните внушения и ценностните послания. Липсва обаче изрично посочване на жанра и по-ясно разграничаване на ключовите думи и изразните средства. С малки допълнения текстът ще бъде отличен.

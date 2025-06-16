@@ -4,7 +4,7 @@ import styled from "styled-components";
 const SLink = styled(Link)`
 	color: var(--color-brand);
 	text-decoration: none;
-	text-align: ${(props) => props.align || "left"};
+	text-align: ${(props) => props.$align || "left"};
 
 	transition: all 0.3s;
 

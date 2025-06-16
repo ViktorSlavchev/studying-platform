@@ -15,8 +15,8 @@ const StyledNav = styled.nav`
 function Nav() {
 	return (
 		<StyledNav>
-			<Row as="ul" direction={"column"} align={"strech"} grow={1} gap={"6rem"}>
-				<Row direction={"column"} align={"strech"} gap={"0.8rem"}>
+			<Row as="ul" $direction={"column"} $align={"strech"} $grow={1} $gap={"6rem"}>
+				<Row $direction={"column"} $align={"strech"} $gap={"0.8rem"}>
 					<NavElement to={"/home"} icon={<HomeIcon />} label={"Начало"} />
 					<NavElement to={"/exams"} icon={<ClipboardDocumentListIcon />} label={"Пробни изпити"} />
 					<NavElement to={"/comment"} icon={<CheckCircleIcon />} label={"Проверка на теза"} />

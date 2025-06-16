@@ -48,9 +48,9 @@ function NavElement({ to, icon, label }) {
 	return (
 		<li>
 			<StyledNavLink to={to}>
-				<Row justify={"flex-start"} align={"center"} gap={"1rem"}>
+				<Row $justify={"flex-start"} $align={"center"} $gap={"1rem"}>
 					<IconWrapper>{icon}</IconWrapper>
-					<Text size={"1.8rem"}>{label}</Text>
+					<Text $size={"1.8rem"}>{label}</Text>
 				</Row>
 			</StyledNavLink>
 		</li>

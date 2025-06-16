@@ -1,4 +1,4 @@
-// import { UserCircleIcon } from "@heroicons/react/24/outline";
+// import { UserCircleIcon } from "@heroicons/react/24/outline};
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
@@ -13,7 +13,7 @@ const StyledProfile = styled(Link)`
 function Profile() {
 	return (
 		<StyledProfile to={"/settings"}>
-			<Row gap="1rem">
+			<Row $gap="1rem">
 				<Text>Виктор Славчев</Text>
 				<IconWrapper sz="md">
 					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor" className="size-6">

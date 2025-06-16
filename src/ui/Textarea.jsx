@@ -10,8 +10,8 @@ const Textarea = styled.textarea`
 	resize: none;
 	font-style: italic;
 
-	width: ${(props) => props.width || "auto"};
-	height: ${(props) => props.height || "auto"};
+	width: ${(props) => props.$width || "auto"};
+	height: ${(props) => props.$height || "auto"};
 
 	&:focus {
 		outline: none;

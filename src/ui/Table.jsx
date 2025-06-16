@@ -12,7 +12,7 @@ const StyledTable = styled.div`
 
 const CommonRow = styled.div`
 	display: grid;
-	grid-template-columns: ${(props) => props.columns};
+	grid-template-columns: ${(props) => props.$columns};
 	column-gap: 2.4rem;
 	align-items: center;
 	transition: none;
@@ -70,7 +70,7 @@ Header.propTypes = {
 function Header({ children }) {
 	const { columns } = useContext(TableContext);
 	return (
-		<StyledHeader columns={columns} role="row">
+		<StyledHeader $columns={columns} role="row">
 			{children}
 		</StyledHeader>
 	);
@@ -84,7 +84,7 @@ Row.propTypes = {
 function Row({ children, selected }) {
 	const { columns } = useContext(TableContext);
 	return (
-		<StyledRow role="row" columns={columns} selected={selected}>
+		<StyledRow role="row" $columns={columns} $selected={selected}>
 			{children}
 		</StyledRow>
 	);

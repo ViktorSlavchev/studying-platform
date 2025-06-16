@@ -18,7 +18,7 @@ const StyledQuestion = styled(InfoBox)`
 function Question({ question, num }) {
 	return (
 		<StyledQuestion>
-			<Text weight={"bold"}>{num} задача.</Text>
+			<Text $weight={"bold"}>{num} задача.</Text>
 			{question.type === "options" && <QuestionOptions question={question} />}
 			{question.type === "shortAnswer" && <QuestionShortAnswer question={question} />}
 			{question.type === "editing" && <QuestionEditing question={question} />}

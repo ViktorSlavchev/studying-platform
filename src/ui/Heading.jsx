@@ -27,6 +27,6 @@ const Heading = styled.h1`
 			line-height: 1.2;
 		`}
 
-	text-align: ${(props) => props.textalign || "left"};
+	text-align: ${(props) => props.$textalign || "left"};
 `;
 export default Heading;
