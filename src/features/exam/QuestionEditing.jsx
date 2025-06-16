@@ -1,13 +1,13 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import { toast } from "react-hot-toast";
 
 import Text from "../../ui/Text";
 import Row from "../../ui/Row";
 import IconWrapper from "../../ui/IconWrapper";
 import Input from "../../ui/Input";
 import Button from "../../ui/Button";
-import Notification from "../../ui/Notification";
 
 import InsertLetterSVG from "../../assets/svgs/InsertLetterSVG";
 import ReplaceSVG from "../../assets/svgs/ReplaceSVG";
@@ -85,8 +85,6 @@ function QuestionEditing({ question }) {
 
 	const [hoveredIndex, setHoveredIndex] = useState(null);
 
-	const [notificationMessage, setNotificationMessage] = useState(null);
-
 	const exportText = (txt = text) => {
 		let result = "";
 		txt.forEach((letter) => {
@@ -144,7 +142,7 @@ function QuestionEditing({ question }) {
 				.filter((x) => x);
 
 			if (exportText(nextText).split(" ").length !== question.text.split(" ").length) {
-				setNotificationMessage("Не може да премахвате цели думи.");
+				toast.error("Не може да премахвате цели думи.");
 				return;
 			}
 			return setText(nextText);
@@ -178,7 +176,7 @@ function QuestionEditing({ question }) {
 				.filter((x) => x);
 
 			if (exportText(nextText).split(" ").length !== question.text.split(" ").length || removingSpace) {
-				setNotificationMessage("Не може да премахвате цели думи.");
+				toast.error("Не може да премахвате цели думи.");
 				return;
 			}
 
@@ -233,7 +231,6 @@ function QuestionEditing({ question }) {
 
 	return (
 		<>
-			{notificationMessage && <Notification message={notificationMessage} onDone={() => setNotificationMessage(null)} />}
 			<StyledEditing>
 				<Text>Поправете допуснатите {question.mistakesCnt} грешки в текста: </Text>
 				<Text>

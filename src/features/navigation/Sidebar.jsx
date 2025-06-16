@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import Logo from "./Logo";
+import Logo from "../../ui/Logo";
 import Nav from "./Nav";
 import Breakpoints from "../../styles/breakpoints";
 

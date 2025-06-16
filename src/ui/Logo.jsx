@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import Heading from "../../ui/Heading";
+import Heading from "./Heading";
 import { useNavigate } from "react-router";
 
 const StyledLogo = styled.div`

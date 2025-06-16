@@ -7,7 +7,7 @@ const Input = styled.input`
 	background-color: var(--bg-color);
 	padding: 0.4rem 0.8rem;
 
-	font-style: italic;
+	/* font-style: italic; */
 
 	&:focus {
 		outline: none;
