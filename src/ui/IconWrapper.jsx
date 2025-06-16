@@ -9,39 +9,39 @@ const IconWrapper = styled.span`
 	width: var(--icon-sz-sm);
 	height: var(--icon-sz-sm);
 
-	${({ inheritsize }) =>
-		inheritsize &&
+	${({ $inheritsize }) =>
+		$inheritsize &&
 		css`
 			width: 1em;
 			height: 1em;
 		`}
 
-	${({ sz }) =>
-		sz === "sm" &&
+	${({ $sz }) =>
+		$sz === "sm" &&
 		css`
 			width: var(--icon-sz-sm);
 			height: var(--icon-sz-sm);
 		`}
 
-	${({ sz }) =>
-		sz === "md" &&
+	${({ $sz }) =>
+		$sz === "md" &&
 		css`
 			width: var(--icon-sz-md);
 			height: var(--icon-sz-md);
 		`}
-	${({ sz }) =>
-		sz === "lg" &&
+	${({ $sz }) =>
+		$sz === "lg" &&
 		css`
 			width: var(--icon-sz-lg);
 			height: var(--icon-sz-lg);
 		`}
 
-	${({ color }) =>
-		color &&
+	${({ $color }) =>
+		$color &&
 		css`
-			color: ${color};
-			stroke: ${color};
-			fill: ${color};
+			color: ${$color};
+			stroke: ${$color};
+			fill: ${$color};
 		`}
 `;
 

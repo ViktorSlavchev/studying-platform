@@ -43,7 +43,7 @@ function InstructionsBox() {
 			<Center>
 				<SLink to="/settings" $align="center">
 					<span>Промени произведенията </span>
-					<IconWrapper inheritsize={"true"}>
+					<IconWrapper $inheritsize={"true"}>
 						<ChevronRightIcon />
 					</IconWrapper>
 				</SLink>

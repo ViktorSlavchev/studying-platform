@@ -28,7 +28,7 @@ function PageNotFound() {
 				<Heading>Страницата не е открита ☹️ </Heading>
 				<SLink to="/">
 					<span>Върни се в началото </span>
-					<IconWrapper inheritsize={true}>
+					<IconWrapper $inheritsize={true}>
 						<ArrowUturnLeftIcon />
 					</IconWrapper>
 				</SLink>
