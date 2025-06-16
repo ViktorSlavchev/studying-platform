@@ -5,7 +5,7 @@ const Input = styled.input`
 	outline: none;
 	border: 2px solid var(--color-border);
 	background-color: var(--bg-color);
-	padding: 0.4rem 0.8rem;
+	padding: 0.8rem 0.8rem;
 
 	/* font-style: italic; */
 
