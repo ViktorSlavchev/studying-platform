@@ -1,12 +1,15 @@
+import { API_URL } from "../../config.js";
+
 export async function login({ email, password }) {
-    const res = await fetch('http://127.0.0.1:3000/api/v1/users/login', {
+    const res = await fetch(`${API_URL}/users/login`, {
         method: 'POST',
-        credentials: 'include', // ⬅️ Important for cookies!
+        credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email, password }),
     });
+
 
     const data = await res.json();
 
@@ -14,5 +17,29 @@ export async function login({ email, password }) {
         throw new Error(data.message || 'Login failed');
     }
 
-    return data.data.user; // or return data if you want token too
+    return data.data.user;
+}
+
+
+export async function getCurrentUser() {
+    const res = await fetch(`${API_URL}/users/me`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    if (res.status === 401) {
+        // Not authenticated
+        return null;
+    }
+
+    const data = await res.json();
+
+    if (!res.ok) {
+        throw new Error(data.message || 'Failed to fetch current user');
+    }
+
+    return data.data.user;
 }

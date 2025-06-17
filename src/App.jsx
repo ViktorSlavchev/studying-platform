@@ -18,6 +18,7 @@ import SettingsPage from "./pages/SettingsPage";
 import PageNotFound from "./pages/PageNotFound";
 import Exam from "./pages/Exam";
 import Login from "./pages/Login";
+import ProtectedRoute from "./ui/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -29,7 +30,13 @@ function App() {
 
 			<BrowserRouter>
 				<Routes>
-					<Route element={<AppLayout />}>
+					<Route
+						element={
+							<ProtectedRoute>
+								<AppLayout />
+							</ProtectedRoute>
+						}
+					>
 						<Route index element={<Navigate replace to="home" />} />
 						<Route path="/home" element={<Home />} />
 						<Route path="/exams" element={<Exams />} />
