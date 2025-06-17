@@ -1,12 +1,12 @@
 import styled from "styled-components";
 
-import LoginForm from "../features/authentication/LoginForm";
+import SignupForm from "../features/authentication/SignupForm";
 import Logo from "../ui/Logo";
 import Heading from "../ui/Heading";
 import Text from "../ui/Text";
 import SLink from "../ui/SLink";
 
-const LoginLayout = styled.main`
+const SignupLayout = styled.main`
 	min-height: 100vh;
 	display: grid;
 	grid-template-columns: 48rem;
@@ -16,19 +16,19 @@ const LoginLayout = styled.main`
 	background-color: var(--bg-color);
 `;
 
-function Login() {
+function Signup() {
 	return (
-		<LoginLayout>
+		<SignupLayout>
 			<Logo />
 			<Heading as="h2" $textalign="center">
-				Влезте във вашия акаунт
+				Създайте вашият акаунт
 			</Heading>
-			<LoginForm />
+			<SignupForm />
 			<Text>
-				Нямате акаунт? <SLink to="/signup">Създай акаунт</SLink>
+				Вече имате акаунт? <SLink to="/login">Вход</SLink>
 			</Text>
-		</LoginLayout>
+		</SignupLayout>
 	);
 }
 
-export default Login;
+export default Signup;

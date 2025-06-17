@@ -18,6 +18,7 @@ import SettingsPage from "./pages/SettingsPage";
 import PageNotFound from "./pages/PageNotFound";
 import Exam from "./pages/Exam";
 import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 import ProtectedRoute from "./ui/ProtectedRoute";
 
 const queryClient = new QueryClient();
@@ -50,6 +51,7 @@ function App() {
 						<Route path="/exam/:id" element={<Exam />} />
 					</Route>
 					<Route path="/login" element={<Login />} />
+					<Route path="/signup" element={<Signup />} />
 					<Route path="*" element={<PageNotFound />} />
 				</Routes>
 			</BrowserRouter>

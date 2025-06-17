@@ -20,6 +20,24 @@ export async function login({ email, password }) {
     return data.data.user;
 }
 
+export async function signup({ email, password, name }) {
+    const res = await fetch(`${API_URL}/users/signup`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password, name }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+        throw new Error(data.message || 'Signup failed');
+    }
+
+    return data.data.user;
+}
 
 export async function getCurrentUser() {
     const res = await fetch(`${API_URL}/users/me`, {
