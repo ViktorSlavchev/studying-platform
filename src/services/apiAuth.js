@@ -43,3 +43,19 @@ export async function getCurrentUser() {
 
     return data.data.user;
 }
+
+export async function logout() {
+    const res = await fetch(`${API_URL}/users/logout`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    if (!res.ok) {
+        throw new Error('Logout failed');
+    }
+
+    return true;
+}
