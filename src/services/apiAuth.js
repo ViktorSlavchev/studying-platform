@@ -77,3 +77,42 @@ export async function logout() {
 
     return true;
 }
+
+
+export async function updateUser(data) {
+    const res = await fetch(`${API_URL}/users/updateMe`, {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    });
+
+    const responseData = await res.json();
+
+    if (!res.ok) {
+        throw new Error(responseData.message || 'Update failed');
+    }
+
+    return responseData.data.user;
+}
+
+export async function changePassword({ currentPassword, newPassword }) {
+    const res = await fetch(`${API_URL}/users/updatePassword`, {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ currentPassword, newPassword }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+        throw new Error(data.message || 'Password change failed');
+    }
+
+    return data.data.user;
+}

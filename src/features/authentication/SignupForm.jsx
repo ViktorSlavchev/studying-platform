@@ -34,7 +34,7 @@ function LoginForm() {
 				</FormRowVertical>
 
 				<FormRowVertical label="Имейл">
-					<Input type="email" id="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} disabled={isLoading} />
+					<Input type="email" id="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} disabled={isLoading} />
 				</FormRowVertical>
 
 				<FormRowVertical label="Парола">

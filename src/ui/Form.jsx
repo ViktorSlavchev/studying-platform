@@ -16,8 +16,15 @@ const Form = styled.form`
 		css`
 			width: 80rem;
 		`}
-    
-  overflow: hidden;
+	
+	${(props) =>
+		props.type === "full-page" &&
+		css`
+			padding: 2.4rem 0;
+			/* width: 40rem; */
+		`}
+
+  	overflow: hidden;
 	font-size: 1.4rem;
 `;
 

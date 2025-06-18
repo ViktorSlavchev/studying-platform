@@ -43,9 +43,32 @@ const circleStyles = css`
 	}
 `;
 
+const secondaryStyles = css`
+	background-color: var(--bg-color);
+	color: var(--color-brand);
+	padding: 0.8rem 2.4rem;
+
+	font-weight: bold;
+	border: 1px solid var(--color-brand);
+
+	border-radius: var(--border-radius-md);
+
+	box-shadow: var(--shadow-sm);
+
+	&:hover {
+		background-color: var(--color-brand-600);
+		color: var(--color-text-light);
+	}
+	&:focus {
+		outline: none;
+		box-shadow: 0 0 0 2px white, 0 0 0 4px var(--color-brand-600);
+	}
+`;
+
 const Button = styled.button`
 	${({ type }) => type == "primary" && primaryStyles};
 	${({ type }) => type == "circle" && circleStyles};
+	${({ type }) => type == "secondary" && secondaryStyles};
 `;
 
 Button.defaultProps = {
