@@ -9,11 +9,11 @@ export function useUpdate() {
     const navigate = useNavigate();
 
     const { mutate: updateUser, isLoading } = useMutation({
-        mutationFn: ({ email, name }) => updateUserApi({ email, name }),
+        mutationFn: (data) => updateUserApi(data),
         onSuccess: (user) => {
             queryClient.setQueryData(["user"], user);
             navigate("/settings", { replace: true });
-            toast.success("Името и имейла са променени успешно.");
+            toast.success("Профилът е променен успешно.");
         },
         onError: (err) => {
             console.log("ERROR", err);
@@ -22,4 +22,6 @@ export function useUpdate() {
     });
 
     return { updateUser, isLoading };
-} 
+}
+
+

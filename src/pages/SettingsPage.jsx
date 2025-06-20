@@ -2,6 +2,7 @@ import styled from "styled-components";
 import Heading from "../ui/Heading";
 import PersonalDataForm from "../features/settings/PersonalDataForm";
 import PasswordChangeForm from "../features/settings/PasswordChangeForm";
+import KnownTopicsForm from "../features/settings/KnownTopicsForm";
 
 const SettingsSection = styled.section`
 	margin-top: 2rem;
@@ -22,6 +23,10 @@ function SettingsPage() {
 			<SettingsSection>
 				<Heading as="h2">Промяна на парола</Heading>
 				<PasswordChangeForm />
+			</SettingsSection>
+			<SettingsSection>
+				<Heading as="h2">Изучавани теми</Heading>
+				<KnownTopicsForm />
 			</SettingsSection>
 		</>
 	);
