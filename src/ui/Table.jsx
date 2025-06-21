@@ -97,7 +97,6 @@ Body.propTypes = {
 
 function Body({ data, render }) {
 	if (!data.length) return <Empty>No data to show at the moment</Empty>;
-	console.log(data, render, data.map(render));
 	return <StyledBody>{data.map(render)}</StyledBody>;
 }
 

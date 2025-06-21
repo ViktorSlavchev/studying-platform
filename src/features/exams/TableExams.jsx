@@ -1,41 +1,17 @@
+import PropTypes from "prop-types";
+
 import SLink from "../../ui/SLink";
 import Table from "../../ui/Table";
+import Spinner from "../../ui/Spinner";
 
-const dummyExams = [
-	{
-		id: 123,
-		timestamp: "2025-02-12",
-		time: 44,
-		score: 25,
-	},
-	{
-		id: 156,
-		timestamp: "2025-01-31",
-		time: 32,
-		score: 40,
-	},
-	{
-		id: 120,
-		timestamp: "2025-02-11",
-		time: 42,
-		score: 65,
-	},
-	{
-		id: 99,
-		timestamp: "2025-02-09",
-		time: 52,
-		score: 63,
-	},
+import dayjs from "../../utils/dayjs";
+import { formatDuration } from "../../utils/formatDuration";
 
-	{
-		id: 300,
-		timestamp: "2025-01-19",
-		time: 30,
-		score: 33,
-	},
-].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+function TableExams({ examsHistory, isLoading }) {
+	if (isLoading || !examsHistory) {
+		return <Spinner />;
+	}
 
-function TableExams() {
 	return (
 		<Table columns="1fr 1fr 1fr 1fr">
 			<Table.Header>
@@ -45,16 +21,16 @@ function TableExams() {
 				<div>Резултат</div>
 			</Table.Header>
 			<Table.Body
-				data={dummyExams}
+				data={[...examsHistory.filter((exam) => exam.status !== "active").sort((a, b) => new Date(b.startedAt) - new Date(a.startedAt))]}
 				render={(exam, ind, { length: len }) => {
 					return (
 						<Table.Row key={exam.id}>
 							<div>
 								<SLink to={`/exam/${exam.id}`}>Изпит {len - ind}</SLink>
 							</div>
-							<div>{exam.timestamp}</div>
-							<div>{exam.time} мин</div>
-							<div>{exam.score} точки</div>
+							<div>{dayjs(exam.startedAt).fromNow()}</div>
+							<div>{formatDuration(exam.startedAt, exam.endedAt)}</div>
+							<div>{exam.points} точки</div>
 						</Table.Row>
 					);
 				}}
@@ -62,5 +38,10 @@ function TableExams() {
 		</Table>
 	);
 }
+
+TableExams.propTypes = {
+	examsHistory: PropTypes.array.isRequired,
+	isLoading: PropTypes.bool.isRequired,
+};
 
 export default TableExams;
