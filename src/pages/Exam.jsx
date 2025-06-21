@@ -10,6 +10,8 @@ import Question from "../features/exam/Question";
 import Row from "../ui/Row";
 import Button from "../ui/Button";
 import TimeLeftBox from "../features/exam/TimeLeftBox";
+import { useExam } from "../features/exam/useExam";
+import Spinner from "../ui/Spinner";
 
 const RightColumn = styled.div`
 	display: flex;
@@ -23,19 +25,18 @@ const RightColumn = styled.div`
 
 function Exam() {
 	const { id } = useParams();
-	const [questions, setQuestions] = useState([]);
+	const { exam, isLoading } = useExam(id);
 
-	useEffect(() => {
-		setQuestions(getQuestions(id));
-	}, [id]);
+	if (isLoading) {
+		return <Spinner />;
+	}
 
-	console.log(questions);
 	return (
 		<>
 			<Heading>Изпит #{id}</Heading>
 			<Row $gap="3.2rem">
 				<QuestionHolder>
-					{questions.map((question, ind) => (
+					{exam.questions.map((question, ind) => (
 						<Question key={question["_id"]} question={question} num={ind + 1} />
 					))}
 				</QuestionHolder>

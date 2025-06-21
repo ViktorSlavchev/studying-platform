@@ -21,7 +21,7 @@ const ActionWrapper = styled(IconWrapper)`
 	border: 1.5px solid var(--color-text-dark);
 	cursor: pointer;
 	transition: border 0.1s;
-	${({ selected }) => (selected ? "border: 3px solid var(--color-brand);" : "border: 1.5px solid var(--color-text-dark)")}
+	${({ $selected }) => ($selected ? "border: 3px solid var(--color-brand);" : "border: 1.5px solid var(--color-text-dark)")}
 `;
 
 const StyledEditing = styled.div`
@@ -247,42 +247,42 @@ function QuestionEditing({ question }) {
 					})}
 				</Text>
 				<Row $gap="1.2rem" $align="center" $justify="center" $alignself="center">
-					<ActionWrapper color="var(--color-text-dark)" sz="lg" onClick={handleUndo} disabled={history.length === 0} style={{ opacity: history.length === 0 ? 0.5 : 1 }}>
+					<ActionWrapper $color="var(--color-text-dark)" $sz="lg" onClick={handleUndo} disabled={history.length === 0} style={{ opacity: history.length === 0 ? 0.5 : 1 }}>
 						<ArrowUturnLeftIcon />
 					</ActionWrapper>
 					<ActionWrapper
-						color={mode === "insert" ? "var(--color-brand)" : "var(--color-text-dark)"}
-						sz="lg"
+						$color={mode === "insert" ? "var(--color-brand)" : "var(--color-text-dark)"}
+						$sz="lg"
 						onClick={() => {
 							setMode("insert");
 							setInputValue("");
 							setAwaitingLetter(null);
 						}}
-						selected={mode === "insert"}
+						$selected={mode === "insert"}
 					>
 						<InsertLetterSVG />
 					</ActionWrapper>
 					<ActionWrapper
-						color={mode === "replace" ? "var(--color-brand)" : "var(--color-text-dark)"}
-						sz="lg"
+						$color={mode === "replace" ? "var(--color-brand)" : "var(--color-text-dark)"}
+						$sz="lg"
 						onClick={() => {
 							setMode("replace");
 							setInputValue("");
 							setAwaitingLetter(null);
 						}}
-						selected={mode === "replace"}
+						$selected={mode === "replace"}
 					>
 						<ReplaceSVG />
 					</ActionWrapper>
 					<ActionWrapper
-						color={mode === "remove" ? "var(--color-brand)" : "var(--color-text-dark)"}
-						sz="lg"
+						$color={mode === "remove" ? "var(--color-brand)" : "var(--color-text-dark)"}
+						$sz="lg"
 						onClick={() => {
 							setMode("remove");
 							setInputValue("");
 							setAwaitingLetter(null);
 						}}
-						selected={mode === "remove"}
+						$selected={mode === "remove"}
 					>
 						<RemoveSVG />
 					</ActionWrapper>
