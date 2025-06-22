@@ -66,3 +66,25 @@ export async function generateExam() {
         throw error;
     }
 }
+
+export async function submitExam(examId) {
+    try {
+        const response = await fetch(`${API_URL}/exams/submit`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error submitting exam with ID ${examId}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        return data.data.exam || null;
+    } catch (error) {
+        console.error(`Failed to submit exam with ID ${examId}:`, error);
+        throw error;
+    }
+}

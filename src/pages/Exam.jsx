@@ -9,6 +9,7 @@ import Button from "../ui/Button";
 import TimeLeftBox from "../features/exam/TimeLeftBox";
 import { useExam } from "../features/exam/useExam";
 import Spinner from "../ui/Spinner";
+import { useEffect, useState } from "react";
 
 const RightColumn = styled.div`
 	display: flex;
@@ -24,6 +25,12 @@ function Exam() {
 	const { id } = useParams();
 	const { exam, isLoading } = useExam(id);
 
+	const [answers, setAnswers] = useState([]);
+
+	useEffect(() => {
+		console.log("Exam answers updated:", answers);
+	}, [answers]);
+
 	if (isLoading) {
 		return <Spinner />;
 	}
@@ -34,7 +41,7 @@ function Exam() {
 			<Row $gap="3.2rem">
 				<QuestionHolder style={{ flex: 2, minWidth: "0" }}>
 					{exam.questions.map((question, ind) => (
-						<Question key={question["_id"]} question={question} num={ind} />
+						<Question key={question["_id"]} question={question} num={ind} answers={answers} setAnswers={setAnswers} />
 					))}
 				</QuestionHolder>
 

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 
@@ -18,16 +17,15 @@ const Option = styled.li`
 	width: fit-content;
 `;
 
-function QuestionOptions({ question }) {
-	const [selected, setSelected] = useState(null);
+function QuestionOptions({ question, answer, onAnswer }) {
 	return (
 		<div>
 			<Text>{question.question}</Text>
 			<StyledUl>
 				{question.options.map((option, index) => (
-					<Option key={index} onClick={() => setSelected(index)}>
+					<Option key={index} onClick={() => onAnswer(option)}>
 						<Text>
-							<Letter ind={index} $highlight={selected === index ? "true" : "false"} /> {option}
+							<Letter ind={index} $highlight={answer === option ? "true" : "false"} /> {option}
 						</Text>
 					</Option>
 				))}
@@ -40,6 +38,8 @@ QuestionOptions.propTypes = {
 		question: PropTypes.string.isRequired,
 		options: PropTypes.arrayOf(PropTypes.string).isRequired,
 	}).isRequired,
+	onAnswer: PropTypes.func.isRequired,
+	answer: PropTypes.string,
 };
 
 export default QuestionOptions;

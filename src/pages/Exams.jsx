@@ -53,7 +53,7 @@ function Exams() {
 				<InstructionsBox />
 			</EntireRow>
 			<Heading as="h2">Предишни изпити</Heading>
-			<TableExams examsHistory={examsHistory} isLoading={isLoading} />
+			<TableExams examsHistory={examsHistory || []} isLoading={isLoading} />
 		</>
 	);
 }
