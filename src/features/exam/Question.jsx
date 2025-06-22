@@ -33,7 +33,7 @@ function Question({ question, num, answers, setAnswers }) {
 			{question.type !== "reading" && <Text $weight={"bold"}>{num} задача.</Text>}
 			{question.type === "options" && <QuestionOptions question={question} answer={currentAnswer} onAnswer={handleAnswerChange} />}
 			{question.type === "shortAnswer" && <QuestionShortAnswer question={question} answer={currentAnswer} onAnswer={handleAnswerChange} />}
-			{question.type === "editing" && <QuestionEditing question={question} />}
+			{question.type === "editing" && <QuestionEditing question={question} answer={currentAnswer} onAnswer={handleAnswerChange} />}
 			{question.type === "reading" && <QuestionReading question={question} />}
 		</StyledQuestion>
 	);

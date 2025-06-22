@@ -39,8 +39,8 @@ const StyledSpan = styled.span`
 	cursor: pointer;
 	position: relative;
 
-	${({ removed }) => removed && "text-decoration: line-through; color: red;"}
-	${({ added }) => added && "color: var(--color-brand);"}
+	${({ $removed }) => $removed && "text-decoration: line-through; color: red;"}
+	${({ $added }) => $added && "color: var(--color-brand);"}
 
 	${({ $hovemode }) =>
 		$hovemode === "replace" || $hovemode === "remove"
@@ -67,7 +67,7 @@ const StyledSpan = styled.span`
 			: ""}
 `;
 
-function QuestionEditing({ question }) {
+function QuestionEditing({ question, onAnswer }) {
 	const [text, setText] = useState(
 		question.text.split("").map((l) => {
 			return {
@@ -109,6 +109,7 @@ function QuestionEditing({ question }) {
 
 		// Update text to previous state
 		setText(JSON.parse(lastState));
+		onAnswer(exportText(JSON.parse(lastState)));
 
 		// Remove the last state from history
 		setHistory((prev) => prev.slice(0, -1));
@@ -145,6 +146,8 @@ function QuestionEditing({ question }) {
 				toast.error("Не може да премахвате цели думи.");
 				return;
 			}
+
+			onAnswer(exportText(nextText));
 			return setText(nextText);
 		}
 
@@ -180,6 +183,7 @@ function QuestionEditing({ question }) {
 				return;
 			}
 
+			onAnswer(exportText(nextText));
 			setText(nextText);
 			setAwaitingLetter(index);
 			return;
@@ -218,6 +222,11 @@ function QuestionEditing({ question }) {
 			insertIndex = insertIndex + 1;
 
 			newText.splice(insertIndex, 0, letterToInsert);
+			setTimeout(() => {
+				onAnswer(exportText(newText));
+			}, 0);
+
+			// onAnswer(exportText(newText));
 			return newText;
 		});
 
@@ -240,7 +249,7 @@ function QuestionEditing({ question }) {
 						}
 
 						return (
-							<StyledSpan key={ind} removed={txt.state === "removed" ? true.toString() : undefined} added={txt.state === "added" ? true.toString() : undefined} $hovemode={mode} onMouseEnter={() => setHoveredIndex(ind)} onMouseLeave={() => setHoveredIndex(null)} onClick={() => handleLetterClick(ind)}>
+							<StyledSpan key={ind} $removed={txt.state === "removed" ? true.toString() : undefined} $added={txt.state === "added" ? true.toString() : undefined} $hovemode={mode} onMouseEnter={() => setHoveredIndex(ind)} onMouseLeave={() => setHoveredIndex(null)} onClick={() => handleLetterClick(ind)}>
 								{txt.visable}
 							</StyledSpan>
 						);
@@ -289,7 +298,7 @@ function QuestionEditing({ question }) {
 				</Row>
 				{awaitingLetter !== null && (
 					<Row $align="center" $justify="center" $alignself="center" $gap="1rem">
-						<Input value={inputValue} onChange={handleInputChange} onKeyDown={handleInputKeyDown} autoFocus placeholder="Въведете буква" maxLength={1} />
+						<Input value={inputValue} onChange={handleInputChange} onKeyDown={handleInputKeyDown} autoFocus placeholder="Въведете буква" maxLength={2} />
 						<Button onClick={handleSubmitLetter} type="circle">
 							<IconWrapper>
 								<CheckIcon />
@@ -301,12 +310,13 @@ function QuestionEditing({ question }) {
 		</>
 	);
 }
-
 QuestionEditing.propTypes = {
 	question: PropTypes.shape({
 		text: PropTypes.string.isRequired,
 		mistakesCnt: PropTypes.number.isRequired,
 	}).isRequired,
+	// answer: PropTypes.string,
+	onAnswer: PropTypes.func.isRequired,
 };
 
 export default QuestionEditing;
