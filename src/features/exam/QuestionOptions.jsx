@@ -27,7 +27,7 @@ function QuestionOptions({ question }) {
 				{question.options.map((option, index) => (
 					<Option key={index} onClick={() => setSelected(index)}>
 						<Text>
-							<Letter ind={index} highlight={selected === index ? "true" : "false"} /> {option}
+							<Letter ind={index} $highlight={selected === index ? "true" : "false"} /> {option}
 						</Text>
 					</Option>
 				))}

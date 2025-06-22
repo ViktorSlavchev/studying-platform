@@ -6,6 +6,7 @@ import QuestionOptions from "./QuestionOptions";
 import Text from "../../ui/Text";
 import QuestionShortAnswer from "./QuestionShortAnswer";
 import QuestionEditing from "./QuestionEditing";
+import QuestionReading from "./QuestionReading";
 
 const StyledQuestion = styled(InfoBox)`
 	display: flex;
@@ -18,10 +19,11 @@ const StyledQuestion = styled(InfoBox)`
 function Question({ question, num }) {
 	return (
 		<StyledQuestion>
-			<Text $weight={"bold"}>{num} задача.</Text>
+			{question.type !== "reading" && <Text $weight={"bold"}>{num} задача.</Text>}
 			{question.type === "options" && <QuestionOptions question={question} />}
 			{question.type === "shortAnswer" && <QuestionShortAnswer question={question} />}
 			{question.type === "editing" && <QuestionEditing question={question} />}
+			{question.type === "reading" && <QuestionReading question={question} />}
 		</StyledQuestion>
 	);
 }

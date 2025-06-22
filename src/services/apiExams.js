@@ -44,3 +44,25 @@ export async function fetchExamById(id) {
         throw error;
     }
 }
+
+export async function generateExam() {
+    try {
+        const response = await fetch(`${API_URL}/exams/generate`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error generating exam: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        return data.data.exam || null;
+    } catch (error) {
+        console.error("Failed to generate exam:", error);
+        throw error;
+    }
+}

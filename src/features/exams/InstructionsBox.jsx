@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { ChevronRightIcon } from "@heroicons/react/24/outline";
 
+import Breakpoints from "../../styles/breakpoints";
 import InfoBox from "../../ui/InfoBox";
 import Heading from "../../ui/Heading";
 import Text from "../../ui/Text";
@@ -12,9 +13,22 @@ const HeadingHolder = styled.div`
 	margin-bottom: 2.8rem;
 `;
 
+const StyledInstructionsBox = styled(InfoBox)`
+	min-width: 40rem;
+
+	@media (max-width: ${Breakpoints.xl}px) {
+		min-width: 30rem;
+		padding: 1rem 3rem;
+	}
+
+	@media (max-width: ${Breakpoints.md}px) {
+		min-width: 24rem;
+	}
+`;
+
 function InstructionsBox() {
 	return (
-		<InfoBox>
+		<StyledInstructionsBox>
 			<HeadingHolder>
 				<Heading as="h2" $textalign="center">
 					Формат
@@ -48,7 +62,7 @@ function InstructionsBox() {
 					</IconWrapper>
 				</SLink>
 			</Center>
-		</InfoBox>
+		</StyledInstructionsBox>
 	);
 }
 

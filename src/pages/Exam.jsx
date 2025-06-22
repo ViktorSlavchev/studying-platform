@@ -1,8 +1,5 @@
 import { useParams } from "react-router";
-import { useEffect, useState } from "react";
 import styled from "styled-components";
-
-import { getQuestions } from "../utils/getQuestions";
 
 import Heading from "../ui/Heading";
 import QuestionHolder from "../features/exam/QuestionHolder";
@@ -35,14 +32,14 @@ function Exam() {
 		<>
 			<Heading>Изпит #{id}</Heading>
 			<Row $gap="3.2rem">
-				<QuestionHolder>
+				<QuestionHolder style={{ flex: 2, minWidth: "0" }}>
 					{exam.questions.map((question, ind) => (
-						<Question key={question["_id"]} question={question} num={ind + 1} />
+						<Question key={question["_id"]} question={question} num={ind} />
 					))}
 				</QuestionHolder>
 
-				<RightColumn>
-					<TimeLeftBox />
+				<RightColumn style={{ flex: 1, minWidth: "0" }}>
+					<TimeLeftBox status={exam.status} startedAt={exam.startedAt} />
 					<Button>Предай</Button>
 				</RightColumn>
 			</Row>

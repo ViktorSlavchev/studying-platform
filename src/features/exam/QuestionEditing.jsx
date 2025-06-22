@@ -42,16 +42,16 @@ const StyledSpan = styled.span`
 	${({ removed }) => removed && "text-decoration: line-through; color: red;"}
 	${({ added }) => added && "color: var(--color-brand);"}
 
-	${({ hovermode }) =>
-		hovermode === "replace" || hovermode === "remove"
+	${({ $hovemode }) =>
+		$hovemode === "replace" || $hovemode === "remove"
 			? `&:hover {
 				text-decoration: line-through;
 				color: red;
 			}`
 			: ""}
 
-	${({ hovermode }) =>
-		hovermode === "insert"
+	${({ $hovemode }) =>
+		$hovemode === "insert"
 			? `&:hover::after {
 				content: "∨";
 				position: absolute;
@@ -240,7 +240,7 @@ function QuestionEditing({ question }) {
 						}
 
 						return (
-							<StyledSpan key={ind} removed={txt.state === "removed" ? true.toString() : undefined} added={txt.state === "added" ? true.toString() : undefined} hovermode={mode} onMouseEnter={() => setHoveredIndex(ind)} onMouseLeave={() => setHoveredIndex(null)} onClick={() => handleLetterClick(ind)}>
+							<StyledSpan key={ind} removed={txt.state === "removed" ? true.toString() : undefined} added={txt.state === "added" ? true.toString() : undefined} $hovemode={mode} onMouseEnter={() => setHoveredIndex(ind)} onMouseLeave={() => setHoveredIndex(null)} onClick={() => handleLetterClick(ind)}>
 								{txt.visable}
 							</StyledSpan>
 						);

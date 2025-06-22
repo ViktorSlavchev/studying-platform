@@ -25,8 +25,8 @@ const StyledSpan = styled.span`
 	display: inline-block;
 	padding: 0.2rem 0.4rem;
 
-	${({ highlight }) =>
-		highlight &&
+	${({ $highlight }) =>
+		$highlight &&
 		css`
 			&::after {
 				content: "";
@@ -48,17 +48,17 @@ const StyledSpan = styled.span`
 		`}
 `;
 
-function Letter({ ind, highlight }) {
+function Letter({ ind, $highlight }) {
 	return (
-		<StyledSpan highlight={highlight}>
-			{letters[ind]}){highlight === "true" && <CircleSVG />}
+		<StyledSpan $highlight={$highlight}>
+			{letters[ind]}){$highlight === "true" && <CircleSVG />}
 		</StyledSpan>
 	);
 }
 
 Letter.propTypes = {
 	ind: PropTypes.number.isRequired,
-	highlight: PropTypes.string.isRequired, // Use boolean instead of string
+	$highlight: PropTypes.string.isRequired, // Use boolean instead of string
 };
 
 export default Letter;
