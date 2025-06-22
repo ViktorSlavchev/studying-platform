@@ -21,7 +21,15 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ProtectedRoute from "./ui/ProtectedRoute";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+	queryDefaults: [
+		{
+			queryKey: [],
+			queryFn: async () => {},
+			staleTime: 5 * 60 * 1000, // 5 minutes
+		},
+	],
+});
 
 function App() {
 	return (
