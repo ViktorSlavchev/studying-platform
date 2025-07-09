@@ -60,6 +60,7 @@ export async function generateExam() {
         }
 
         const data = await response.json();
+        console.log(data.data);
         return data.data.exam || null;
     } catch (error) {
         console.error("Failed to generate exam:", error);

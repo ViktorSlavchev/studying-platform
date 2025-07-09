@@ -9,6 +9,7 @@ import InstructionsBox from "../features/exams/InstructionsBox";
 import TableExams from "../features/exams/TableExams";
 import { useExamHistory } from "../features/exams/useExamHistory";
 import { useNavigate } from "react-router";
+import { useGenerateExam } from "../features/exams/useGenerateExam";
 
 const EntireRow = styled.div`
 	display: flex;
@@ -31,6 +32,7 @@ const EntireRow = styled.div`
 
 function Exams() {
 	const { examsHistory, isLoading } = useExamHistory();
+	const { generateExam } = useGenerateExam();
 	const activeExamId = examsHistory?.find((exam) => exam.status === "active")?.id;
 	const navigate = useNavigate();
 
@@ -38,7 +40,8 @@ function Exams() {
 		if (activeExamId) {
 			navigate("/exam/" + activeExamId, { replace: true });
 		} else {
-			alert("Започни изпита тук! (функционалността е в процес на разработка)");
+			// alert("Започни изпита тук! (функционалността е в процес на разработка)");
+			generateExam();
 		}
 	};
 
