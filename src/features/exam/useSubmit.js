@@ -8,7 +8,10 @@ export function useSubmit() {
     const navigate = useNavigate();
 
     const { mutate: submit, isLoading } = useMutation({
-        mutationFn: (examId) => submitExamApi(examId),
+        mutationFn: ({ id: examId, answers }) => {
+            submitExamApi(examId, answers)
+        }
+        ,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["exam"] });
             navigate("/exams", { replace: true });

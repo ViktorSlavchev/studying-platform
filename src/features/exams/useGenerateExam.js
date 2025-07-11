@@ -11,12 +11,13 @@ export function useGenerateExam() {
         queryFn: generateExamApi,
         enabled: false,
         onSuccess: (exam) => {
+            console.log(exam);
             toast.success('Изпитът е генериран успешно!');
             navigate(`/exam/${exam.examId}`, { replace: true });
         },
         onError: (error) => {
             console.error('Error generating exam:', error);
-            toast.error('Грешка при генериране на изпита. Моля, опитайте отново.');
+            toast.error('Грешка при генериране на изпита. Моля, опитайте отново. Ако проблемът продължава, свържете се с администратора.');
         },
     });
 

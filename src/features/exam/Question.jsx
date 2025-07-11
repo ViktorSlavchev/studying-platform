@@ -7,6 +7,7 @@ import Text from "../../ui/Text";
 import QuestionShortAnswer from "./QuestionShortAnswer";
 import QuestionEditing from "./QuestionEditing";
 import QuestionReading from "./QuestionReading";
+import React from "react";
 
 const StyledQuestion = styled(InfoBox)`
 	display: flex;
@@ -48,4 +49,9 @@ Question.propTypes = {
 	setAnswers: PropTypes.func.isRequired,
 };
 
-export default Question;
+export default React.memo(Question, (prevProps, nextProps) => {
+	const prevAnswer = prevProps.answers.find((a) => a.questionId === prevProps.question._id)?.answer;
+	const nextAnswer = nextProps.answers.find((a) => a.questionId === nextProps.question._id)?.answer;
+
+	return prevProps.question._id === nextProps.question._id && prevAnswer === nextAnswer;
+});
