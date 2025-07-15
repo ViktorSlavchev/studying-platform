@@ -12,6 +12,7 @@ import Spinner from "../ui/Spinner";
 import SpinnerMini from "../ui/SpinnerMini";
 import { useEffect, useState } from "react";
 import QuestionQuotes from "../features/exam/QuestionQuotes";
+import QuestionLongAnswer from "../features/exam/QuestionLongAnswer";
 import { useSubmit } from "../features/exam/useSubmit";
 
 const RightColumn = styled.div`
@@ -43,7 +44,17 @@ function Exam() {
 			}
 			const initialAnswers = exam.questions.map((question, index) => ({
 				questionId: question["_id"],
-				answer: "",
+				answer:
+					question.type === "editing"
+						? {
+								stateText: question.text.split("").map((l) => ({
+									value: l,
+									state: "normal",
+									visable: l.replaceAll("*", "\u00A0"),
+								})),
+								exportedText: question.text,
+						  }
+						: "",
 				questionNum: index,
 			}));
 			setAnswers(initialAnswers);
@@ -62,7 +73,8 @@ function Exam() {
 					{exam.questions.map((question, ind) => (
 						<Question key={question["_id"]} question={question} num={ind} answers={answers} setAnswers={setAnswers} status={exam.status} />
 					))}
-					{<QuestionQuotes quotes={exam.quotes} answers={answers} setAnswers={setAnswers} />}
+					{<QuestionQuotes quotes={exam.quotes?.slice(0, 4)} answers={answers} setAnswers={setAnswers} />}
+					{<QuestionLongAnswer question={exam.quotes?.slice(-1)[0]} answers={answers} setAnswers={setAnswers} />}
 				</QuestionHolder>
 
 				<RightColumn style={{ flex: 1, minWidth: "0" }}>
