@@ -4,6 +4,7 @@ import Text from "../../ui/Text";
 import LongInput from "../../ui/LongInput";
 import { useEffect, useState } from "react";
 import InfoBox from "../../ui/InfoBox";
+import MultipleLines from "../../ui/MultipleLines";
 
 const StyledQuestion = styled(InfoBox)`
 	display: flex;
@@ -42,11 +43,7 @@ function QuestionLongAnswer({ question, answers, setAnswers }) {
 			<Text $weight={"bold"}>25 задача.</Text>
 			<Text>Напишете коментар в текст от 3-4 изречения по думите:</Text>
 			<QuoteText>
-				{question.quote.split("\n").map((t, ind) => (
-					<span key={ind}>
-						{t} <br />
-					</span>
-				))}
+				<MultipleLines text={question.quote} />
 			</QuoteText>
 			<LongInput placeholder="Напишете тезата тук ..." value={value} onChange={(e) => handleChange(e.target.value)} />
 		</StyledQuestion>

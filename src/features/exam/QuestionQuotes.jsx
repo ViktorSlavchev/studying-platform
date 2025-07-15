@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { litTopics } from "../../utils/topics";
 import InfoBox from "../../ui/InfoBox";
 import styled from "styled-components";
+import MultipleLines from "../../ui/MultipleLines";
 
 const StyledQuestion = styled(InfoBox)`
 	display: flex;
@@ -56,12 +57,7 @@ function QuestionQuotes({ quotes, answers, setAnswers }) {
 				<QuoteHolder key={q._id || idx}>
 					<Text $weight={"bold"}>{String.fromCharCode(1072 + idx)})</Text>
 					<Text style={{ marginBottom: "0.5rem" }}>
-						{q.quote.split("\n").map((line, i) => (
-							<span key={i}>
-								{line}
-								<br />
-							</span>
-						))}
+						<MultipleLines text={q.quote} />
 					</Text>
 					<InputAutofill value={values[idx]} onChange={(val) => handleChange(idx, val)} list={litTopics} style={{ width: "100%", gridColumn: "2 / 3" }} />
 				</QuoteHolder>
