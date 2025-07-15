@@ -10,7 +10,7 @@ import TimeLeftBox from "../features/exam/TimeLeftBox";
 import { useExam } from "../features/exam/useExam";
 import Spinner from "../ui/Spinner";
 import SpinnerMini from "../ui/SpinnerMini";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import QuestionQuotes from "../features/exam/QuestionQuotes";
 import { useSubmit } from "../features/exam/useSubmit";
 
@@ -29,11 +29,26 @@ function Exam() {
 	const { exam, isLoading } = useExam(id);
 	const { submit, isLoading: isLoadingSubmit } = useSubmit();
 
-	const [answers, setAnswers] = useState([]); // {questionId: string, answer: string}[]
+	const [answers, setAnswers] = useState([]); // {questionId: string, answer: string, questionNum: number}[]
 
 	const handleSubmit = () => {
 		submit({ id, answers });
 	};
+
+	useEffect(() => {
+		if (exam && exam.questions) {
+			if (exam.status === "completed") {
+				setAnswers(exam.answers);
+				return;
+			}
+			const initialAnswers = exam.questions.map((question, index) => ({
+				questionId: question["_id"],
+				answer: "",
+				questionNum: index,
+			}));
+			setAnswers(initialAnswers);
+		}
+	}, [exam]);
 
 	if (isLoading) {
 		return <Spinner />;
@@ -45,7 +60,7 @@ function Exam() {
 			<Row $gap="3.2rem">
 				<QuestionHolder style={{ flex: 2, minWidth: "0" }}>
 					{exam.questions.map((question, ind) => (
-						<Question key={question["_id"]} question={question} num={ind} answers={answers} setAnswers={setAnswers} />
+						<Question key={question["_id"]} question={question} num={ind} answers={answers} setAnswers={setAnswers} status={exam.status} />
 					))}
 					{<QuestionQuotes quotes={exam.quotes} answers={answers} setAnswers={setAnswers} />}
 				</QuestionHolder>

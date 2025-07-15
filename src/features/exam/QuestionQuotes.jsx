@@ -43,7 +43,7 @@ function QuestionQuotes({ quotes, answers, setAnswers }) {
 		if (answers.find((a) => a.questionId === quoteId)) {
 			setAnswers((prev) => prev.map((a) => (a.questionId === quoteId ? { ...a, answer: val } : a)));
 		} else {
-			setAnswers((prev) => [...prev, { questionId: quoteId, answer: val }]);
+			setAnswers((prev) => [...prev, { questionId: quoteId, answer: val, questionNum: 24 }]);
 		}
 	};
 

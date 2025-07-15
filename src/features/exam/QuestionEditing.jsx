@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import { toast } from "react-hot-toast";
@@ -67,16 +67,21 @@ const StyledSpan = styled.span`
 			: ""}
 `;
 
-function QuestionEditing({ question, onAnswer }) {
-	const [text, setText] = useState(
-		question.text.split("").map((l) => {
+function QuestionEditing({ question, answer, onAnswer, status }) {
+	const [text, setText] = useState(() => {
+		console.log(answer);
+		if (answer && answer.stateText) {
+			return answer.stateText;
+		}
+
+		return question.text.split("").map((l) => {
 			return {
 				value: l,
 				state: "normal",
 				visable: l.replaceAll("*", "\u00A0"),
 			};
-		})
-	);
+		});
+	});
 
 	const [mode, setMode] = useState(null);
 	const [awaitingLetter, setAwaitingLetter] = useState(null);
@@ -84,6 +89,12 @@ function QuestionEditing({ question, onAnswer }) {
 	const [history, setHistory] = useState([]);
 
 	const [hoveredIndex, setHoveredIndex] = useState(null);
+
+	useEffect(() => {
+		if (status === "completed" && answer && answer.stateText) {
+			setText(answer.stateText);
+		}
+	}, [answer, status]);
 
 	const exportText = (txt = text) => {
 		let result = "";
@@ -109,7 +120,10 @@ function QuestionEditing({ question, onAnswer }) {
 
 		// Update text to previous state
 		setText(JSON.parse(lastState));
-		onAnswer(exportText(JSON.parse(lastState)));
+		onAnswer({
+			exportedText: exportText(JSON.parse(lastState)),
+			stateText: JSON.parse(lastState),
+		});
 
 		// Remove the last state from history
 		setHistory((prev) => prev.slice(0, -1));
@@ -147,7 +161,10 @@ function QuestionEditing({ question, onAnswer }) {
 				return;
 			}
 
-			onAnswer(exportText(nextText));
+			onAnswer({
+				exportedText: exportText(nextText),
+				stateText: nextText,
+			});
 			return setText(nextText);
 		}
 
@@ -183,7 +200,10 @@ function QuestionEditing({ question, onAnswer }) {
 				return;
 			}
 
-			onAnswer(exportText(nextText));
+			onAnswer({
+				exportedText: exportText(nextText),
+				stateText: nextText,
+			});
 			setText(nextText);
 			setAwaitingLetter(index);
 			return;
@@ -223,10 +243,12 @@ function QuestionEditing({ question, onAnswer }) {
 
 			newText.splice(insertIndex, 0, letterToInsert);
 			setTimeout(() => {
-				onAnswer(exportText(newText));
+				onAnswer({
+					exportedText: exportText(newText),
+					stateText: newText,
+				});
 			}, 0);
 
-			// onAnswer(exportText(newText));
 			return newText;
 		});
 
@@ -255,47 +277,49 @@ function QuestionEditing({ question, onAnswer }) {
 						);
 					})}
 				</Text>
-				<Row $gap="1.2rem" $align="center" $justify="center" $alignself="center">
-					<ActionWrapper $color="var(--color-text-dark)" $sz="lg" onClick={handleUndo} disabled={history.length === 0} style={{ opacity: history.length === 0 ? 0.5 : 1 }}>
-						<ArrowUturnLeftIcon />
-					</ActionWrapper>
-					<ActionWrapper
-						$color={mode === "insert" ? "var(--color-brand)" : "var(--color-text-dark)"}
-						$sz="lg"
-						onClick={() => {
-							setMode("insert");
-							setInputValue("");
-							setAwaitingLetter(null);
-						}}
-						$selected={mode === "insert"}
-					>
-						<InsertLetterSVG />
-					</ActionWrapper>
-					<ActionWrapper
-						$color={mode === "replace" ? "var(--color-brand)" : "var(--color-text-dark)"}
-						$sz="lg"
-						onClick={() => {
-							setMode("replace");
-							setInputValue("");
-							setAwaitingLetter(null);
-						}}
-						$selected={mode === "replace"}
-					>
-						<ReplaceSVG />
-					</ActionWrapper>
-					<ActionWrapper
-						$color={mode === "remove" ? "var(--color-brand)" : "var(--color-text-dark)"}
-						$sz="lg"
-						onClick={() => {
-							setMode("remove");
-							setInputValue("");
-							setAwaitingLetter(null);
-						}}
-						$selected={mode === "remove"}
-					>
-						<RemoveSVG />
-					</ActionWrapper>
-				</Row>
+				{status !== "completed" && (
+					<Row $gap="1.2rem" $align="center" $justify="center" $alignself="center">
+						<ActionWrapper $color="var(--color-text-dark)" $sz="lg" onClick={handleUndo} disabled={history.length === 0} style={{ opacity: history.length === 0 ? 0.5 : 1 }}>
+							<ArrowUturnLeftIcon />
+						</ActionWrapper>
+						<ActionWrapper
+							$color={mode === "insert" ? "var(--color-brand)" : "var(--color-text-dark)"}
+							$sz="lg"
+							onClick={() => {
+								setMode("insert");
+								setInputValue("");
+								setAwaitingLetter(null);
+							}}
+							$selected={mode === "insert"}
+						>
+							<InsertLetterSVG />
+						</ActionWrapper>
+						<ActionWrapper
+							$color={mode === "replace" ? "var(--color-brand)" : "var(--color-text-dark)"}
+							$sz="lg"
+							onClick={() => {
+								setMode("replace");
+								setInputValue("");
+								setAwaitingLetter(null);
+							}}
+							$selected={mode === "replace"}
+						>
+							<ReplaceSVG />
+						</ActionWrapper>
+						<ActionWrapper
+							$color={mode === "remove" ? "var(--color-brand)" : "var(--color-text-dark)"}
+							$sz="lg"
+							onClick={() => {
+								setMode("remove");
+								setInputValue("");
+								setAwaitingLetter(null);
+							}}
+							$selected={mode === "remove"}
+						>
+							<RemoveSVG />
+						</ActionWrapper>
+					</Row>
+				)}
 				{awaitingLetter !== null && (
 					<Row $align="center" $justify="center" $alignself="center" $gap="1rem">
 						<Input value={inputValue} onChange={handleInputChange} onKeyDown={handleInputKeyDown} autoFocus placeholder="Въведете буква" maxLength={2} />
@@ -315,7 +339,10 @@ QuestionEditing.propTypes = {
 		text: PropTypes.string.isRequired,
 		mistakesCnt: PropTypes.number.isRequired,
 	}).isRequired,
-	// answer: PropTypes.string,
+	answer: PropTypes.shape({
+		stateText: PropTypes.array,
+	}),
+	status: PropTypes.string.isRequired,
 	onAnswer: PropTypes.func.isRequired,
 };
 

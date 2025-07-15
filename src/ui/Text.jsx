@@ -29,6 +29,12 @@ const Text = styled.p`
 			font-weight: ${props.$weight || "normal"};
 		`}
 
+	${(props) =>
+		props.$color &&
+		css`
+			color: ${props.$color};
+		`}
+		
 	line-height: 1.5;
 `;
 

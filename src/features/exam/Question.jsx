@@ -17,15 +17,26 @@ const StyledQuestion = styled(InfoBox)`
 	padding-top: 1.6rem;
 	padding-bottom: 1.6rem;
 `;
-function Question({ question, num, answers, setAnswers }) {
-	const currentAnswer = answers.find((a) => a.questionId === question["_id"])?.answer;
+
+const CASpan = styled.span`
+	font-weight: 700;
+`;
+function Question({ question, num, answers, setAnswers, status }) {
+	const currentAnswerObject = answers.find((a) => a.questionId === question["_id"]);
+	const currentAnswer = currentAnswerObject?.answer;
+
+	const points = currentAnswerObject?.points || 0;
+	const maxPoints = currentAnswerObject?.maxPoints || 0;
+	const correctAnswer = currentAnswerObject?.correctAnswer || "";
 
 	function handleAnswerChange(answer) {
+		if (status === "completed") return; // Do not allow changes if the exam is completed
+
 		// check if an answer is given;
-		if (answers.find((a) => a.questionId === question["_id"])) {
+		if (currentAnswerObject) {
 			setAnswers((prev) => prev.map((a) => (a.questionId === question["_id"] ? { ...a, answer } : a)));
 		} else {
-			setAnswers((prev) => [...prev, { questionId: question["_id"], answer }]);
+			setAnswers((prev) => [...prev, { questionId: question["_id"], answer, questionNum: num }]);
 		}
 	}
 
@@ -34,8 +45,19 @@ function Question({ question, num, answers, setAnswers }) {
 			{question.type !== "reading" && <Text $weight={"bold"}>{num} задача.</Text>}
 			{question.type === "options" && <QuestionOptions question={question} answer={currentAnswer} onAnswer={handleAnswerChange} />}
 			{question.type === "shortAnswer" && <QuestionShortAnswer question={question} answer={currentAnswer} onAnswer={handleAnswerChange} />}
-			{question.type === "editing" && <QuestionEditing question={question} answer={currentAnswer} onAnswer={handleAnswerChange} />}
+			{question.type === "editing" && <QuestionEditing status={status} question={question} answer={currentAnswer} onAnswer={handleAnswerChange} />}
 			{question.type === "reading" && <QuestionReading question={question} />}
+
+			{status === "completed" && question.type !== "reading" && (
+				<Text $weight="bold" $color={points === maxPoints ? "green" : points === 0 ? "red" : "orange"}>
+					Точки: {points} / {maxPoints}
+				</Text>
+			)}
+			{status === "completed" && question.type !== "reading" && points !== maxPoints && (
+				<Text>
+					<CASpan>Правилен отговор:</CASpan> {correctAnswer}
+				</Text>
+			)}
 		</StyledQuestion>
 	);
 }
@@ -47,6 +69,7 @@ Question.propTypes = {
 	num: PropTypes.number.isRequired,
 	answers: PropTypes.array.isRequired,
 	setAnswers: PropTypes.func.isRequired,
+	status: PropTypes.string, // Add this line for status prop validation
 };
 
 export default React.memo(Question, (prevProps, nextProps) => {
