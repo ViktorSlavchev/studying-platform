@@ -8,7 +8,7 @@ import Text from "../../ui/Text";
 import Center from "../../ui/Center";
 import Row from "../../ui/Row";
 
-function TimeLeftBox({ startedAt, status }) {
+function TimeLeftBox({ startedAt, status, answeredQuestionsCount }) {
 	const [now, setNow] = useState(new Date());
 
 	useEffect(() => {
@@ -35,7 +35,7 @@ function TimeLeftBox({ startedAt, status }) {
 							<Text $size="2.4rem">{formatTimeLeft(startedAt, now)}</Text>
 						)}
 					</Row>
-					<Text>7 / 25 задачи</Text>
+					<Text>{answeredQuestionsCount} / 25 задачи</Text>
 				</Row>
 			</Center>
 		</InfoBox>
@@ -45,6 +45,7 @@ function TimeLeftBox({ startedAt, status }) {
 TimeLeftBox.propTypes = {
 	startedAt: PropTypes.any,
 	status: PropTypes.string.isRequired,
+	answeredQuestionsCount: PropTypes.number.isRequired,
 };
 
 export default TimeLeftBox;

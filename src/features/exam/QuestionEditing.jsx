@@ -69,7 +69,6 @@ const StyledSpan = styled.span`
 
 function QuestionEditing({ question, answer, onAnswer, status }) {
 	const [text, setText] = useState(() => {
-		console.log(answer);
 		if (answer && answer.stateText) {
 			return answer.stateText;
 		}

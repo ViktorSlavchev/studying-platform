@@ -31,6 +31,7 @@ function Exam() {
 	const { submit, isLoading: isLoadingSubmit } = useSubmit();
 
 	const [answers, setAnswers] = useState([]); // {questionId: string, answer: string, questionNum: number}[]
+	const answeredQuestionsCount = Array.from(new Set(answers.filter((a) => a.answer !== "").map((q) => q.questionNum))).length;
 
 	const handleSubmit = () => {
 		submit({ id, answers });
@@ -61,6 +62,8 @@ function Exam() {
 		}
 	}, [exam]);
 
+	console.log(answers);
+
 	if (isLoading) {
 		return <Spinner />;
 	}
@@ -78,7 +81,7 @@ function Exam() {
 				</QuestionHolder>
 
 				<RightColumn style={{ flex: 1, minWidth: "0" }}>
-					<TimeLeftBox status={exam.status} startedAt={exam.startedAt} />
+					<TimeLeftBox status={exam.status} startedAt={exam.startedAt} answeredQuestionsCount={answeredQuestionsCount} />
 					<Button onClick={handleSubmit}>{isLoadingSubmit ? <SpinnerMini /> : "Предай"}</Button>
 				</RightColumn>
 			</Row>
