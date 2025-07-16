@@ -47,6 +47,21 @@ function Exam() {
 				setAnswers(examData.answers);
 				return;
 			}
+			// Auto-submit timer
+			const startedTime = new Date(examData.startedAt).getTime();
+			const now = Date.now();
+			const oneHour = 60 * 60 * 1000;
+			const timeLeft = startedTime + oneHour - now;
+
+			if (timeLeft <= 0) {
+				handleSubmit(); // Already expired
+			} else {
+				timeoutRef.current = setTimeout(() => {
+					handleSubmit();
+				}, timeLeft);
+
+				console.log("Auto-submit timer set for:", new Date(startedTime + oneHour).toLocaleString());
+			}
 
 			// Try to load saved answers from localStorage
 			// This allows resuming the exam if the user navigates away and comes back
@@ -84,20 +99,6 @@ function Exam() {
 			setAnswers(initialAnswers);
 			localStorage.setItem(`exam-answers-${examData._id}`, JSON.stringify(initialAnswers));
 			console.log("Initialized answers:", initialAnswers);
-
-			// Auto-submit timer
-			const startedTime = new Date(examData.startedAt).getTime();
-			const now = Date.now();
-			const oneHour = 60 * 60 * 1000;
-			const timeLeft = startedTime + oneHour - now;
-
-			if (timeLeft <= 0) {
-				handleSubmit(); // Already expired
-			} else {
-				timeoutRef.current = setTimeout(() => {
-					handleSubmit();
-				}, timeLeft);
-			}
 		},
 		[setAnswers, handleSubmit]
 	);

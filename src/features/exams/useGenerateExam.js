@@ -11,6 +11,11 @@ export function useGenerateExam() {
         queryKey: ['generateExam'],
         queryFn: generateExamApi,
         enabled: false,
+        retry: (failureCount, error) => {
+            if (error?.message?.toLowerCase().includes("unseen material")) return false;
+            return failureCount < 2;
+        },
+
         onSuccess: (exam) => {
             console.log(exam);
             toast.success('Изпитът е генериран успешно!');
