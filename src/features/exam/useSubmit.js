@@ -14,7 +14,8 @@ export function useSubmit() {
         ,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["exam"] });
-            navigate("/exams", { replace: true });
+            navigate(0); // reload current page to show updated exam status
+            toast.success("Изпитът е предаден успешно");
         },
         onError: (err) => {
             console.error("ERROR", err);
