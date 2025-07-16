@@ -10,6 +10,8 @@ import Row from "../../ui/Row";
 
 function TimeLeftBox({ startedAt, status, answeredQuestionsCount }) {
 	const [now, setNow] = useState(new Date());
+	const formatedTimeLeft = formatTimeLeft(startedAt, now);
+	const isCriticalTime = +formatedTimeLeft.slice(0, 2) < 5;
 
 	useEffect(() => {
 		if (status === "completed") return;
@@ -32,7 +34,9 @@ function TimeLeftBox({ startedAt, status, answeredQuestionsCount }) {
 								Завършил
 							</Text>
 						) : (
-							<Text $size="2.4rem">{formatTimeLeft(startedAt, now)}</Text>
+							<Text $size="2.4rem" $color={isCriticalTime ? "red" : "dark"}>
+								{formatedTimeLeft}
+							</Text>
 						)}
 					</Row>
 
