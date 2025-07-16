@@ -90,7 +90,8 @@ function QuestionEditing({ question, answer, onAnswer, status }) {
 	const [hoveredIndex, setHoveredIndex] = useState(null);
 
 	useEffect(() => {
-		if (status === "completed" && answer && answer.stateText) {
+		// if (status === "completed" && answer && answer.stateText) {
+		if (answer && answer.stateText) {
 			setText(answer.stateText);
 		}
 	}, [answer, status]);

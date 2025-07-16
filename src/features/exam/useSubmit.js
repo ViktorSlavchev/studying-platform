@@ -10,8 +10,7 @@ export function useSubmit() {
     const { mutate: submit, isLoading } = useMutation({
         mutationFn: ({ id: examId, answers }) => {
             submitExamApi(examId, answers)
-        }
-        ,
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["exam"] });
             navigate(0); // reload current page to show updated exam status

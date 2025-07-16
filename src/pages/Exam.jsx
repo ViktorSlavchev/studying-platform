@@ -10,7 +10,7 @@ import TimeLeftBox from "../features/exam/TimeLeftBox";
 import { useExam } from "../features/exam/useExam";
 import Spinner from "../ui/Spinner";
 import SpinnerMini from "../ui/SpinnerMini";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import QuestionQuotes from "../features/exam/QuestionQuotes";
 import QuestionLongAnswer from "../features/exam/QuestionLongAnswer";
 import { useSubmit } from "../features/exam/useSubmit";
@@ -27,57 +27,86 @@ const RightColumn = styled.div`
 
 function Exam() {
 	const { id } = useParams();
-	const { exam, isLoading } = useExam({ id, onSuccess: onExamLoaded });
 	const { submit, isLoading: isLoadingSubmit } = useSubmit();
 
 	const [answers, setAnswers] = useState([]); // {questionId: string, answer: string, questionNum: number}[]
 	const answersRef = useRef([]);
 	const answeredQuestionsCount = Array.from(new Set(answers.filter((a) => a.answer !== "").map((q) => q.questionNum))).length;
-
-	const handleSubmit = () => {
-		submit({ id, answers: answersRef.current });
-	};
-
 	const timeoutRef = useRef(null);
 
+	const { exam, isLoading } = useExam({ id });
+	const handleSubmit = useCallback(() => {
+		localStorage.removeItem(`exam-answers-${id}`);
+		submit({ id, answers: answersRef.current });
+	}, [id, submit]);
+
 	// Set initial answers when exam data is loaded and set up the auto-submit timer
-	function onExamLoaded(examData) {
-		if (examData.status === "completed") {
-			setAnswers(examData.answers);
-			return;
-		}
-		// Set initial answers based on questions
-		const initialAnswers = examData.questions.map((question, index) => ({
-			questionId: question["_id"],
-			answer:
-				question.type === "editing"
-					? {
-							stateText: question.text.split("").map((l) => ({
-								value: l,
-								state: "normal",
-								visable: l.replaceAll("*", "\u00A0"),
-							})),
-							exportedText: question.text,
-					  }
-					: "",
-			questionNum: index,
-		}));
-		setAnswers(initialAnswers);
+	const onExamLoaded = useCallback(
+		(examData) => {
+			if (examData.status === "completed") {
+				setAnswers(examData.answers);
+				return;
+			}
 
-		// Auto-submit timer
-		const startedTime = new Date(examData.startedAt).getTime();
-		const now = Date.now();
-		const oneHour = 60 * 60 * 1000;
-		const timeLeft = startedTime + oneHour - now;
+			// Try to load saved answers from localStorage
+			// This allows resuming the exam if the user navigates away and comes back
+			const savedAnswers = localStorage.getItem(`exam-answers-${examData._id}`);
+			if (savedAnswers) {
+				try {
+					const parsed = JSON.parse(savedAnswers);
+					if (Array.isArray(parsed) && parsed.length === examData.questions.length) {
+						console.log("Loaded saved answers from localStorage:", parsed, examData.questions);
+						setAnswers(parsed);
+						return;
+					}
+				} catch (err) {
+					console.error("Failed to parse saved answers from localStorage:", err);
+					localStorage.removeItem(`exam-answers-${examData._id}`); // Clear invalid data
+				}
+			}
 
-		if (timeLeft <= 0) {
-			handleSubmit(); // Already expired
-		} else {
-			timeoutRef.current = setTimeout(() => {
-				handleSubmit();
-			}, timeLeft);
+			// If no saved answers, initialize with empty answers
+			const initialAnswers = examData.questions.map((question, index) => ({
+				questionId: question["_id"],
+				answer:
+					question.type === "editing"
+						? {
+								stateText: question.text.split("").map((l) => ({
+									value: l,
+									state: "normal",
+									visable: l.replaceAll("*", "\u00A0"),
+								})),
+								exportedText: question.text,
+						  }
+						: "",
+				questionNum: index,
+			}));
+			setAnswers(initialAnswers);
+			localStorage.setItem(`exam-answers-${examData._id}`, JSON.stringify(initialAnswers));
+			console.log("Initialized answers:", initialAnswers);
+
+			// Auto-submit timer
+			const startedTime = new Date(examData.startedAt).getTime();
+			const now = Date.now();
+			const oneHour = 60 * 60 * 1000;
+			const timeLeft = startedTime + oneHour - now;
+
+			if (timeLeft <= 0) {
+				handleSubmit(); // Already expired
+			} else {
+				timeoutRef.current = setTimeout(() => {
+					handleSubmit();
+				}, timeLeft);
+			}
+		},
+		[setAnswers, handleSubmit]
+	);
+
+	useEffect(() => {
+		if (exam) {
+			onExamLoaded(exam);
 		}
-	}
+	}, [exam, onExamLoaded]);
 
 	// Cleanup timeout on unmount
 	useEffect(() => {
@@ -88,11 +117,16 @@ function Exam() {
 		};
 	}, []);
 
-	// Update answersRef whenever answers change
+	// Update answersRef whenever answers change and save to localStorage
 	useEffect(() => {
 		// Update answersRef whenever answers change
 		answersRef.current = answers;
-	}, [answers]);
+
+		// Save answers to localStorage
+		if (answers.length === 0) return; // Don't save empty answers
+		localStorage.setItem(`exam-answers-${id}`, JSON.stringify(answers));
+		console.log("Answers saved to localStorage:", answers);
+	}, [answers, id]);
 
 	if (isLoading) {
 		return <Spinner />;

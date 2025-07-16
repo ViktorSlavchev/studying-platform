@@ -51,7 +51,7 @@ function Exams() {
 			<EntireRow>
 				<Row $direction="column" $justify="space-evenly">
 					<Text>От бутона отдолу можеш да започнеш пробен изпит по формата на първия модул на НВО. Той включва текст за четене с разбиране, въпроси по български език, литература, текст за редактиране и коментар на цитат от изучавано произведение.</Text>
-					<Button onClick={handleStartExam}>{activeExamId ? "Продължи" : "Започни сега"}</Button>
+					<Button onClick={handleStartExam}>{activeExamId ? "Продължи текущия изпит" : "Започни сега"}</Button>
 				</Row>
 				<InstructionsBox />
 			</EntireRow>
