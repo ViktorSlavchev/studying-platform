@@ -35,7 +35,8 @@ function TimeLeftBox({ startedAt, status, answeredQuestionsCount }) {
 							<Text $size="2.4rem">{formatTimeLeft(startedAt, now)}</Text>
 						)}
 					</Row>
-					<Text>{answeredQuestionsCount} / 25 задачи</Text>
+
+					{status !== "completed" && <Text>{answeredQuestionsCount} / 25 задачи</Text>}
 				</Row>
 			</Center>
 		</InfoBox>

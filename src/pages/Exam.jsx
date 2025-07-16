@@ -10,7 +10,7 @@ import TimeLeftBox from "../features/exam/TimeLeftBox";
 import { useExam } from "../features/exam/useExam";
 import Spinner from "../ui/Spinner";
 import SpinnerMini from "../ui/SpinnerMini";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import QuestionQuotes from "../features/exam/QuestionQuotes";
 import QuestionLongAnswer from "../features/exam/QuestionLongAnswer";
 import { useSubmit } from "../features/exam/useSubmit";
@@ -27,7 +27,7 @@ const RightColumn = styled.div`
 
 function Exam() {
 	const { id } = useParams();
-	const { exam, isLoading } = useExam(id);
+	const { exam, isLoading } = useExam({ id, onSuccess: onExamLoaded });
 	const { submit, isLoading: isLoadingSubmit } = useSubmit();
 
 	const [answers, setAnswers] = useState([]); // {questionId: string, answer: string, questionNum: number}[]
@@ -37,13 +37,11 @@ function Exam() {
 		submit({ id, answers });
 	};
 
-	useEffect(() => {
-		if (exam && exam.questions) {
-			if (exam.status === "completed") {
-				setAnswers(exam.answers);
-				return;
-			}
-			const initialAnswers = exam.questions.map((question, index) => ({
+	function onExamLoaded(examData) {
+		if (examData.status === "completed") {
+			setAnswers(examData.answers);
+		} else {
+			const initialAnswers = examData.questions.map((question, index) => ({
 				questionId: question["_id"],
 				answer:
 					question.type === "editing"
@@ -60,9 +58,7 @@ function Exam() {
 			}));
 			setAnswers(initialAnswers);
 		}
-	}, [exam]);
-
-	console.log(answers);
+	}
 
 	if (isLoading) {
 		return <Spinner />;
@@ -76,13 +72,13 @@ function Exam() {
 					{exam.questions.map((question, ind) => (
 						<Question key={question["_id"]} question={question} num={ind} answers={answers} setAnswers={setAnswers} status={exam.status} />
 					))}
-					{<QuestionQuotes quotes={exam.quotes?.slice(0, 4)} answers={answers} setAnswers={setAnswers} />}
+					{<QuestionQuotes quotes={exam.quotes?.slice(0, 4)} answers={answers} setAnswers={setAnswers} status={exam.status} />}
 					{<QuestionLongAnswer question={exam.quotes?.slice(-1)[0]} answers={answers} setAnswers={setAnswers} />}
 				</QuestionHolder>
 
 				<RightColumn style={{ flex: 1, minWidth: "0" }}>
 					<TimeLeftBox status={exam.status} startedAt={exam.startedAt} answeredQuestionsCount={answeredQuestionsCount} />
-					<Button onClick={handleSubmit}>{isLoadingSubmit ? <SpinnerMini /> : "Предай"}</Button>
+					{exam.status !== "completed" && <Button onClick={handleSubmit}>{isLoadingSubmit ? <SpinnerMini /> : "Предай"}</Button>}
 				</RightColumn>
 			</Row>
 		</>

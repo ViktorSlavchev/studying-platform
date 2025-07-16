@@ -22,8 +22,12 @@ const QuoteHolder = styled.div`
 	margin-bottom: 1.2rem;
 `;
 
-function QuestionQuotes({ quotes, answers, setAnswers }) {
+function QuestionQuotes({ quotes, answers, setAnswers, status }) {
 	const [values, setValues] = useState(Array(quotes.length).fill(""));
+	const myAnswers = quotes.map((q) => {
+		const ans = answers.find((a) => a.questionId === q._id);
+		return ans;
+	});
 
 	// Load existing answers for quotes
 	useEffect(() => {
@@ -35,6 +39,8 @@ function QuestionQuotes({ quotes, answers, setAnswers }) {
 	}, [quotes, answers]);
 
 	const handleChange = (idx, val) => {
+		if (status === "completed") return; // Prevent changes if exam is completed
+
 		setValues((prev) => {
 			const next = [...prev];
 			next[idx] = val;
@@ -59,7 +65,17 @@ function QuestionQuotes({ quotes, answers, setAnswers }) {
 					<Text style={{ marginBottom: "0.5rem" }}>
 						<MultipleLines text={q.quote} />
 					</Text>
-					<InputAutofill value={values[idx]} onChange={(val) => handleChange(idx, val)} list={litTopics} style={{ width: "100%", gridColumn: "2 / 3" }} />
+					<InputAutofill value={values?.[idx] || ""} onChange={(val) => handleChange(idx, val)} list={litTopics} style={{ width: "100%", gridColumn: "2 / 3" }} />
+					{status === "completed" && myAnswers?.[idx]?.points === 0 && (
+						<Text style={{ gridColumn: "2/3", marginTop: "0.2rem" }} $weight="bold">
+							Правилен отговор: {myAnswers[idx].correctAnswer}{" "}
+						</Text>
+					)}
+					{status === "completed" && (
+						<Text style={{ gridColumn: "2/3", marginTop: "0.8rem" }} $color={myAnswers?.[idx]?.points === 1 ? "green" : "red"}>
+							{myAnswers?.[idx]?.points} / 1
+						</Text>
+					)}
 				</QuoteHolder>
 			))}
 		</StyledQuestion>
@@ -77,6 +93,7 @@ QuestionQuotes.propTypes = {
 	).isRequired,
 	answers: PropTypes.array.isRequired,
 	setAnswers: PropTypes.func.isRequired,
+	status: PropTypes.string, // Add status prop validation
 };
 
 export default QuestionQuotes;

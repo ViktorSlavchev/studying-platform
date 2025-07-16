@@ -45,7 +45,7 @@ function QuestionLongAnswer({ question, answers, setAnswers }) {
 			<QuoteText>
 				<MultipleLines text={question.quote} />
 			</QuoteText>
-			<LongInput placeholder="Напишете тезата тук ..." value={value} onChange={(e) => handleChange(e.target.value)} />
+			<LongInput placeholder="Напишете тезата тук ..." value={value || ""} onChange={(e) => handleChange(e.target.value)} />
 		</StyledQuestion>
 	);
 }
