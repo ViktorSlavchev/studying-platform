@@ -1,4 +1,5 @@
 import { API_URL } from "../../config.js";
+import { handleApiError } from "../utils/handleApiError.js";
 
 export async function fetchExamHistory() {
     try {
@@ -31,6 +32,7 @@ export async function fetchExamById(id) {
 
         const body = await response.json();
 
+
         if (!response.ok) {
             throw new Error(body.message || `Error fetching exam with ID ${id} (${response.status})`);
         }
@@ -38,6 +40,7 @@ export async function fetchExamById(id) {
         return body.data.exam || null;
     } catch (error) {
         console.error(`Failed to fetch exam with ID ${id}:`, error.message);
+        handleApiError(error);
         throw error;
     }
 }

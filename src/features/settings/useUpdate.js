@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
 
 import { updateUser as updateUserApi } from "../../services/apiAuth";
+import { handleApiError } from "../../utils/handleApiError";
 
 export function useUpdate() {
     const queryClient = useQueryClient();
@@ -18,6 +19,7 @@ export function useUpdate() {
         onError: (err) => {
             console.log("ERROR", err);
             toast.error("Грешка при актуализацията на данните.");
+            handleApiError(err, navigate, "/settings", false);
         },
     });
 

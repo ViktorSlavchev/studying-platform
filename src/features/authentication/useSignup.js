@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { signup as signupApi } from '../../services/apiAuth';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
+import { handleApiError } from '../../utils/handleApiError';
 
 export function useSignup() {
     const queryClient = useQueryClient();
@@ -17,7 +18,8 @@ export function useSignup() {
         },
         onError: (err) => {
             console.log('ERROR', err);
-            toast.error('Вече съществува акаунт с този имейл адрес.');
+            if (err.message.toLowerCase().includes('duplicate')) toast.error('Вече съществува акаунт с този имейл адрес.');
+            else handleApiError(err, navigate, "/signup");
         },
     });
 

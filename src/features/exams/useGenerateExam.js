@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { generateExam as generateExamApi } from '../../services/apiExams';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { handleApiError } from '../../utils/handleApiError';
 
 export function useGenerateExam() {
     const navigate = useNavigate();
@@ -17,7 +18,12 @@ export function useGenerateExam() {
         },
         onError: (error) => {
             console.error('Error generating exam:', error);
-            toast.error('Грешка при генериране на изпита. Моля, опитайте отново. Ако проблемът продължава, свържете се с администратора.');
+            if (error.message.toLowerCase().includes("unseen material")) {
+                toast.error("Не сте отбелязали достатъчно теми като взети, за да генерираме изпит.")
+            } else {
+                toast.error('Грешка при генериране на изпита. Моля, опитайте отново. Ако проблемът продължава, свържете се с администратора.');
+            }
+            handleApiError(error, navigate, '/exams', false);
         },
     });
 

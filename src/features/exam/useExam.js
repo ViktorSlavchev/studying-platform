@@ -1,7 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchExamById } from "../../services/apiExams";
+import { handleApiError } from "../../utils/handleApiError";
+import { useNavigate } from "react-router";
 
 export function useExam({ id, onSuccess }) {
+    const navigate = useNavigate();
+
     const { data: exam, isLoading } = useQuery({
         queryKey: ["exam", id],
         queryFn: () => fetchExamById(id),
@@ -14,6 +18,10 @@ export function useExam({ id, onSuccess }) {
             if (onSuccess) {
                 onSuccess(data);
             }
+        },
+        onError: (error) => {
+            console.error("Failed to fetch exam data:", error);
+            handleApiError(error, navigate, "/exams")
         },
     });
 
