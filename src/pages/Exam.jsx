@@ -146,7 +146,7 @@ function Exam() {
 				</QuestionHolder>
 
 				<RightColumn style={{ flex: 1, minWidth: "0" }}>
-					<TimeLeftBox status={exam.status} startedAt={exam.startedAt} answeredQuestionsCount={answeredQuestionsCount} />
+					<TimeLeftBox status={exam.status} startedAt={exam.startedAt} answeredQuestionsCount={answeredQuestionsCount} score={exam.points || 0} />
 					{exam.status !== "completed" && <Button onClick={handleSubmit}>{isLoadingSubmit ? <SpinnerMini /> : "Предай"}</Button>}
 				</RightColumn>
 			</Row>

@@ -8,7 +8,7 @@ import Text from "../../ui/Text";
 import Center from "../../ui/Center";
 import Row from "../../ui/Row";
 
-function TimeLeftBox({ startedAt, status, answeredQuestionsCount }) {
+function TimeLeftBox({ startedAt, status, answeredQuestionsCount, score }) {
 	const [now, setNow] = useState(new Date());
 	const formatedTimeLeft = formatTimeLeft(startedAt, now);
 	const isCriticalTime = +formatedTimeLeft.slice(0, 2) < 5;
@@ -41,6 +41,7 @@ function TimeLeftBox({ startedAt, status, answeredQuestionsCount }) {
 					</Row>
 
 					{status !== "completed" && <Text>{answeredQuestionsCount} / 25 задачи</Text>}
+					{status === "completed" && <Text>{score} / 65 точни</Text>}
 				</Row>
 			</Center>
 		</InfoBox>
@@ -51,6 +52,7 @@ TimeLeftBox.propTypes = {
 	startedAt: PropTypes.any,
 	status: PropTypes.string.isRequired,
 	answeredQuestionsCount: PropTypes.number.isRequired,
+	score: PropTypes.number,
 };
 
 export default TimeLeftBox;
