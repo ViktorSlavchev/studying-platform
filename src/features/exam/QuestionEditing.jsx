@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import { toast } from "react-hot-toast";
@@ -89,6 +89,8 @@ function QuestionEditing({ question, answer, onAnswer, status }) {
 
 	const [hoveredIndex, setHoveredIndex] = useState(null);
 
+	const [mistakesFixed, setMistakesFixed] = useState(0);
+
 	useEffect(() => {
 		// if (status === "completed" && answer && answer.stateText) {
 		if (answer && answer.stateText) {
@@ -96,17 +98,49 @@ function QuestionEditing({ question, answer, onAnswer, status }) {
 		}
 	}, [answer, status]);
 
-	const exportText = (txt = text) => {
-		let result = "";
-		txt.forEach((letter) => {
-			if (letter.state !== "removed") {
-				result += letter.value;
-			}
-		});
+	const exportText = useCallback(
+		(txt = text) => {
+			let result = "";
+			txt.forEach((letter) => {
+				if (letter.state !== "removed") {
+					result += letter.value;
+				}
+			});
 
-		// Optional: Clean up consecutive spaces like in the JS version
-		return result.replace(/  +/g, " ");
-	};
+			// Optional: Clean up consecutive spaces like in the JS version
+			return result.replace(/  +/g, " ");
+		},
+		[text]
+	);
+
+	const countChanges = useCallback(
+		(txt = text) => {
+			function callback(word) {
+				if (word.at(-1) === ",") {
+					return {
+						word: word.slice(0, -1),
+						punctuation: ",",
+					};
+				}
+				return {
+					word,
+					punctuation: "",
+				};
+			}
+
+			let changes = 0;
+			const exportedText = exportText(txt).split(" ").map(callback);
+			const originalText = question.text.split(" ").map(callback);
+
+			for (let i = 0; i < exportedText.length; i++) {
+				changes += exportedText[i].word !== originalText[i].word ? 1 : 0;
+				changes += exportedText[i].punctuation !== originalText[i].punctuation ? 1 : 0;
+			}
+
+			return changes;
+		},
+		[text, question.text, exportText]
+	);
 
 	const saveToHistory = () => {
 		setHistory((prevHistory) => [...prevHistory, JSON.stringify(text)]);
@@ -260,10 +294,16 @@ function QuestionEditing({ question, answer, onAnswer, status }) {
 		insertLetter();
 	};
 
+	useEffect(() => {
+		setMistakesFixed(countChanges());
+	}, [text, countChanges]);
+
 	return (
 		<>
 			<StyledEditing>
-				<Text>Поправете допуснатите {question.mistakesCnt} грешки в текста: </Text>
+				<Text>
+					Поправете допуснатите {question.mistakesCnt} ({mistakesFixed} / {question.mistakesCnt}) грешки в текста:{" "}
+				</Text>
 				<Text>
 					{text.map((txt, ind) => {
 						if (txt.state === "removed" && (txt.value === "*" || txt.value === "-")) {
