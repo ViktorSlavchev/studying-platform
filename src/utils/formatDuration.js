@@ -13,8 +13,8 @@ export function formatDuration(start, end) {
 }
 
 
-export function formatTimeLeft(start, now) {
-    const endTime = dayjs(start).add(60, 'minutes');
+export function formatTimeLeft(start, now, length = 60) {
+    const endTime = dayjs(start).add(length, 'minutes');
     const durationMs = endTime.diff(now);
     const duration = dayjs.duration(durationMs);
 

@@ -8,10 +8,10 @@ import Text from "../../ui/Text";
 import Center from "../../ui/Center";
 import Row from "../../ui/Row";
 
-function TimeLeftBox({ startedAt, status, answeredQuestionsCount, score }) {
+function TimeLeftBox({ startedAt, status, score }) {
 	const [now, setNow] = useState(new Date());
-	const formatedTimeLeft = formatTimeLeft(startedAt, now);
-	const isCriticalTime = +formatedTimeLeft.slice(0, 2) < 5;
+	const formatedTimeLeft = formatTimeLeft(startedAt, now, 3);
+	const isCriticalTime = +formatedTimeLeft.slice(0, 2) === 0 && +formatedTimeLeft.slice(3, 5) <= 15;
 
 	useEffect(() => {
 		if (status === "completed") return;
@@ -40,8 +40,9 @@ function TimeLeftBox({ startedAt, status, answeredQuestionsCount, score }) {
 						)}
 					</Row>
 
-					{status !== "completed" && <Text>{answeredQuestionsCount} / 25 задачи</Text>}
-					{status === "completed" && <Text>{score} / 65 точки</Text>}
+					<Text>
+						{score} точк{score === 1 ? "а" : "и"}
+					</Text>
 				</Row>
 			</Center>
 		</InfoBox>

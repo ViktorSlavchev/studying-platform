@@ -33,7 +33,7 @@ const Wrapper = styled.div`
 	grid-column: 2 / 3;
 `;
 
-function InputAutofill({ list, value, onChange, placeholder, ...props }) {
+function InputAutofill({ list, value, onChange, placeholder, onSelect, ...props }) {
 	const [showSuggestions, setShowSuggestions] = useState(false);
 	const [filtered, setFiltered] = useState([]);
 	const [highlighted, setHighlighted] = useState(-1);
@@ -46,22 +46,29 @@ function InputAutofill({ list, value, onChange, placeholder, ...props }) {
 					return { str: item, value: compareStrings(value, item) };
 				})
 				.sort((a, b) => b.value - a.value)
-				.map((item) => item.str)
+				// .map((item) => item.str)
 				.slice(0, Math.min(4, list.length));
-			setFiltered(filteredList);
+			setFiltered(filteredList.map((item) => item.str));
 			setShowSuggestions(filteredList.length > 0);
-			setHighlighted(-1);
+			if (filteredList.length > 0 && filteredList[0].value > 0.4) {
+				setHighlighted(0);
+			} else {
+				setHighlighted(-1);
+			}
 
-			if (value === filteredList[0]) {
+			if (value === filteredList[0].str) {
 				// If the input value matches the best suggestion, don't show suggestions
 				setShowSuggestions(false);
+				if (onSelect) {
+					onSelect(value);
+				}
 			}
 		} else {
 			setFiltered([]);
 			setShowSuggestions(false);
 			setHighlighted(-1);
 		}
-	}, [value, list]);
+	}, [value, list, onSelect]);
 
 	const handleInputChange = (e) => {
 		onChange(e.target.value);
@@ -73,6 +80,7 @@ function InputAutofill({ list, value, onChange, placeholder, ...props }) {
 	};
 
 	const handleKeyDown = (e) => {
+		console.log("Key pressed:", e.key);
 		if (!showSuggestions) return;
 		if (e.key === "ArrowDown") {
 			e.preventDefault();
@@ -114,6 +122,7 @@ InputAutofill.propTypes = {
 	value: PropTypes.string.isRequired,
 	onChange: PropTypes.func.isRequired,
 	placeholder: PropTypes.string,
+	onSelect: PropTypes.func,
 };
 
 export default InputAutofill;

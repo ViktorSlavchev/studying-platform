@@ -20,6 +20,7 @@ import Exam from "./pages/Exam";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ProtectedRoute from "./ui/ProtectedRoute";
+import QuotesGame from "./pages/QuotesGame";
 
 const queryClient = new QueryClient({
 	queryDefaults: [
@@ -52,6 +53,7 @@ function App() {
 						<Route path="/comment" element={<CommentCheck />} />
 						<Route path="/daily" element={<DailyMission />} />
 						<Route path="/quotes" element={<QuotesPage />} />
+						<Route path="/quotes/game" element={<QuotesGame />} />
 						<Route path="/mistakes" element={<WrongQuestions />} />
 						<Route path="/ai" element={<AskAI />} />
 						<Route path="/contact-us" element={<ContactUs />} />
