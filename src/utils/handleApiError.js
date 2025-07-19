@@ -7,7 +7,7 @@ export function handleApiError(error, navigate, path = "/home", displayToast = t
         if (displayToast) toast.error("Сесията е изтекла. Моля, влезте отново.");
         navigate("/login");
     } else {
-        if (displayToast) toast.error(`Something went wrong: ${message}`);
+        if (displayToast) toast.error(`Нещо се обърка: ${message}`);
         navigate(path, { replace: true });
     }
 }

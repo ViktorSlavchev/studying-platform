@@ -73,7 +73,6 @@ function KnownTopicsForm() {
 
 	function handleSubmit() {
 		updateUser({ knownTopics: selectedTopics });
-		console.log("Selected topics:", selectedTopics);
 	}
 
 	if (isLoading) return <Spinner />;
