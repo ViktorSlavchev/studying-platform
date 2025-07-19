@@ -9,7 +9,11 @@ export function useQuotes() {
     const { data: quotes, isLoading } = useQuery({
         queryKey: ["quotes"],
         queryFn: fetchQuotes,
-        staleTime: 5 * 60 * 1000,
+        staleTime: 3 * 60 * 1000,
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
+
 
         onError: (error) => {
             console.error("Failed to fetch quotes:", error);

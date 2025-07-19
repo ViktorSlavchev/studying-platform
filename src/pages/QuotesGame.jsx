@@ -17,11 +17,34 @@ import IconWrapper from "../ui/IconWrapper";
 import { useQuotes } from "../features/quotes/useQuotes";
 import Spinner from "../ui/Spinner";
 
+// Storage helpers
+const STORAGE_KEY = "quotesGameState";
+const GAME_DURATION_MS = 3 * 60 * 1000;
+
+function saveGameState(state) {
+	localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+	console.log("Game state saved:", JSON.stringify(state));
+}
+
+function loadGameState() {
+	const raw = localStorage.getItem(STORAGE_KEY);
+	if (!raw) return null;
+	try {
+		console.log("Loading game state:", raw);
+		return JSON.parse(raw);
+	} catch {
+		return null;
+	}
+}
+
+function clearGameState() {
+	localStorage.removeItem(STORAGE_KEY);
+}
+
 const RightColumn = styled.div`
 	display: flex;
 	flex-direction: column;
 	gap: 1.6rem;
-
 	align-self: flex-start;
 	position: sticky;
 	top: 2rem;
@@ -34,7 +57,6 @@ const QuoteBox = styled(InfoBox)`
 	padding: 2.4rem 3.6rem;
 	min-height: 30rem;
 	justify-content: center;
-
 	flex: 1;
 `;
 
@@ -90,34 +112,19 @@ function QuotesGame() {
 
 	const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
 	const [answer, setAnswer] = useState("");
-	const [startedAt] = useState(new Date());
+	const [startedAt, setStartedAt] = useState(new Date());
 	const [score, setScore] = useState(0);
 	const [answeredQuestions, setAnsweredQuestions] = useState(0);
 	const [gameStatus, setGameStatus] = useState("in-progress");
 	const [isError, setIsError] = useState(false);
 	const timeoutRef = useRef(null);
+	const [hasLoadedState, setHasLoadedState] = useState(false);
 
-	useEffect(() => {
-		const gameTime = 3 * 60 * 1000; // 3 minutes
-		timeoutRef.current = setTimeout(() => {
-			endGame();
-		}, gameTime);
-
-		return () => {
-			if (timeoutRef.current) {
-				clearTimeout(timeoutRef.current);
-			}
-		};
-	}, []);
-
-	if (isLoading) {
-		return <Spinner />;
-	}
-
-	const currentQuote = quotes[currentQuoteIndex];
+	const currentQuote = quotes?.[currentQuoteIndex];
 
 	const endGame = () => {
 		setGameStatus("completed");
+		clearGameState();
 		if (timeoutRef.current) {
 			clearTimeout(timeoutRef.current);
 		}
@@ -126,7 +133,6 @@ function QuotesGame() {
 	const handleSubmitAnswer = () => {
 		if (!answer.trim()) return;
 
-		// Check if answer is correct
 		const isCorrect = answer.toLowerCase().trim() === currentQuote.answer.toLowerCase().trim();
 		console.log(`Checking answer: ${answer} against ${currentQuote.answer}`);
 
@@ -136,19 +142,63 @@ function QuotesGame() {
 			setAnswer("");
 			setIsError(false);
 
-			// Move to next question or stop if no more questions
 			if (currentQuoteIndex < quotes.length - 1) {
 				setCurrentQuoteIndex(currentQuoteIndex + 1);
 			} else {
-				// No more questions - just stop, don't end game
 				setGameStatus("no-more-questions");
 			}
 		} else {
-			// Wrong answer - show error and let user try again
 			setIsError(true);
 			setTimeout(() => setIsError(false), 500);
 		}
 	};
+
+	// Load saved game state or start a new game
+	useEffect(() => {
+		const saved = loadGameState();
+		if (saved) {
+			const timeElapsed = Date.now() - new Date(saved.startedAt).getTime();
+			if (timeElapsed < GAME_DURATION_MS) {
+				setStartedAt(new Date(saved.startedAt));
+				setCurrentQuoteIndex(saved.currentQuoteIndex || 0);
+				setAnsweredQuestions(saved.answeredQuestions || 0);
+				setScore(saved.score || 0);
+
+				const remainingTime = GAME_DURATION_MS - timeElapsed;
+				timeoutRef.current = setTimeout(() => {
+					endGame();
+				}, remainingTime);
+
+				setHasLoadedState(true);
+				return;
+			} else {
+				endGame();
+			}
+		}
+
+		const now = new Date();
+		setStartedAt(now);
+		timeoutRef.current = setTimeout(() => {
+			endGame();
+		}, GAME_DURATION_MS);
+		setHasLoadedState(true);
+	}, []);
+
+	// Save game state periodically
+	useEffect(() => {
+		if (gameStatus === "in-progress" && hasLoadedState) {
+			saveGameState({
+				currentQuoteIndex,
+				startedAt,
+				answeredQuestions,
+				score,
+			});
+		}
+	}, [currentQuoteIndex, startedAt, answeredQuestions, score, gameStatus, hasLoadedState]);
+
+	if (isLoading) {
+		return <Spinner />;
+	}
 
 	return (
 		<>

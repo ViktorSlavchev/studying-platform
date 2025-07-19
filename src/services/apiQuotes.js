@@ -16,7 +16,7 @@ export async function fetchQuotes() {
 
         const data = await res.json();
         console.log(data.data.data)
-        return data.data.data || [];
+        return data.data.data.sort(() => Math.random() - 0.5) || [];
     } catch (error) {
         console.error('Error fetching quotes:', error);
         throw error;
