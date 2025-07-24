@@ -38,7 +38,7 @@ function InstructionsBox() {
 				<Text>
 					Време:{" "}
 					<Text $textstyle="italic" as="span">
-						5 мин
+						3 мин
 					</Text>
 				</Text>
 				<Text>

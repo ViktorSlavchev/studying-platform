@@ -9,13 +9,14 @@ import InputAutofill from "../ui/InputAutofill";
 import Button from "../ui/Button";
 import TimeLeftBoxQuotes from "../features/quotes/TimeLeftBoxQuotes";
 import MultipleLines from "../ui/MultipleLines";
+import Spinner from "../ui/Spinner";
 import SLink from "../ui/SLink";
 import { ArrowUturnLeftIcon } from "@heroicons/react/24/outline";
 
 import { litTopics } from "../utils/topics";
 import IconWrapper from "../ui/IconWrapper";
 import { useQuotes } from "../features/quotes/useQuotes";
-import Spinner from "../ui/Spinner";
+import { seededShuffle } from "../utils/seededShuffle";
 
 // Storage helpers
 const STORAGE_KEY = "quotesGameState";
@@ -23,14 +24,12 @@ const GAME_DURATION_MS = 3 * 60 * 1000;
 
 function saveGameState(state) {
 	localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-	console.log("Game state saved:", JSON.stringify(state));
 }
 
 function loadGameState() {
 	const raw = localStorage.getItem(STORAGE_KEY);
 	if (!raw) return null;
 	try {
-		console.log("Loading game state:", raw);
 		return JSON.parse(raw);
 	} catch {
 		return null;
@@ -119,8 +118,9 @@ function QuotesGame() {
 	const [isError, setIsError] = useState(false);
 	const timeoutRef = useRef(null);
 	const [hasLoadedState, setHasLoadedState] = useState(false);
+	const [shuffledQuotes, setShuffledQuotes] = useState([]);
 
-	const currentQuote = quotes?.[currentQuoteIndex];
+	const currentQuote = shuffledQuotes?.[currentQuoteIndex] ?? null;
 
 	const endGame = () => {
 		setGameStatus("completed");
@@ -134,7 +134,6 @@ function QuotesGame() {
 		if (!answer.trim()) return;
 
 		const isCorrect = answer.toLowerCase().trim() === currentQuote.answer.toLowerCase().trim();
-		console.log(`Checking answer: ${answer} against ${currentQuote.answer}`);
 
 		if (isCorrect) {
 			setScore(score + 1);
@@ -155,48 +154,49 @@ function QuotesGame() {
 
 	// Load saved game state or start a new game
 	useEffect(() => {
+		if (!quotes || quotes.length === 0 || isLoading) return;
+
 		const saved = loadGameState();
-		if (saved) {
+		if (saved && quotes.length > 0) {
 			const timeElapsed = Date.now() - new Date(saved.startedAt).getTime();
 			if (timeElapsed < GAME_DURATION_MS) {
 				setStartedAt(new Date(saved.startedAt));
 				setCurrentQuoteIndex(saved.currentQuoteIndex || 0);
 				setAnsweredQuestions(saved.answeredQuestions || 0);
 				setScore(saved.score || 0);
-
+				setShuffledQuotes(seededShuffle(quotes, saved.seed));
 				const remainingTime = GAME_DURATION_MS - timeElapsed;
-				timeoutRef.current = setTimeout(() => {
-					endGame();
-				}, remainingTime);
-
+				timeoutRef.current = setTimeout(endGame, remainingTime);
 				setHasLoadedState(true);
 				return;
-			} else {
-				endGame();
 			}
 		}
 
+		// Start new game
+		const seed = Math.floor(Math.random() * 1000000000);
 		const now = new Date();
 		setStartedAt(now);
-		timeoutRef.current = setTimeout(() => {
-			endGame();
-		}, GAME_DURATION_MS);
+		setShuffledQuotes(seededShuffle(quotes, seed));
+		timeoutRef.current = setTimeout(endGame, GAME_DURATION_MS);
+		saveGameState({ currentQuoteIndex: 0, startedAt: now, answeredQuestions: 0, score: 0, seed });
 		setHasLoadedState(true);
-	}, []);
+	}, [quotes, isLoading]);
 
 	// Save game state periodically
 	useEffect(() => {
 		if (gameStatus === "in-progress" && hasLoadedState) {
+			const saved = loadGameState();
 			saveGameState({
 				currentQuoteIndex,
 				startedAt,
 				answeredQuestions,
 				score,
+				seed: saved?.seed || 0, // fallback if ever missing
 			});
 		}
 	}, [currentQuoteIndex, startedAt, answeredQuestions, score, gameStatus, hasLoadedState]);
 
-	if (isLoading) {
+	if (isLoading || !hasLoadedState || !currentQuote) {
 		return <Spinner />;
 	}
 

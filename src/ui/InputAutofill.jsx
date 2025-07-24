@@ -80,7 +80,6 @@ function InputAutofill({ list, value, onChange, placeholder, onSelect, ...props 
 	};
 
 	const handleKeyDown = (e) => {
-		console.log("Key pressed:", e.key);
 		if (!showSuggestions) return;
 		if (e.key === "ArrowDown") {
 			e.preventDefault();
