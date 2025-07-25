@@ -36,9 +36,17 @@ const StyledRow = styled(CommonRow)`
 	&:not(:last-child) {
 		border-bottom: 2px solid var(--color-border);
 	}
+
+	transition: all 0.2s ease-in-out;
+
+	${(props) =>
+		props.$selected &&
+		`
+		background-color: var(--color-brand-50);
+	`}
 `;
 const StyledBody = styled.section`
-	margin: 0.4rem 0;
+	/* padding: 0.4rem 0; */
 `;
 
 const Empty = styled.p`
@@ -81,10 +89,10 @@ Row.propTypes = {
 	selected: PropTypes.bool,
 };
 
-function Row({ children, selected }) {
+function Row({ children, selected, ...props }) {
 	const { columns } = useContext(TableContext);
 	return (
-		<StyledRow role="row" $columns={columns} $selected={selected}>
+		<StyledRow role="row" $columns={columns} $selected={selected} {...props}>
 			{children}
 		</StyledRow>
 	);

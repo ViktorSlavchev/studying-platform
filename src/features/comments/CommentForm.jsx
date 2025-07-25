@@ -5,6 +5,11 @@ import Textarea from "../../ui/Textarea";
 import Button from "../../ui/Button";
 import styled from "styled-components";
 import Text from "../../ui/Text";
+import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import { useGrader } from "./useGrader";
+import SpinnerMini from "../../ui/SpinnerMini";
+import toast from "react-hot-toast";
 
 const options = [
 	{ value: "Хайдути", label: "Хайдути" },
@@ -39,13 +44,51 @@ const StyledTextarea = styled(Textarea)`
 	height: 16rem;
 `;
 
-function CommentForm() {
+function CommentForm({ selectedComment, onInput }) {
+	const [quote, setQuote] = useState("");
+	const [thesis, setThesis] = useState("");
+	const [selectedTopic, setSelectedTopic] = useState("Хайдути");
+
+	const { grade, isLoading } = useGrader();
+
+	useEffect(() => {
+		if (selectedComment) {
+			setQuote(selectedComment.quote);
+			setThesis(selectedComment.comment);
+			setSelectedTopic(selectedComment.text);
+		}
+	}, [selectedComment]);
+
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		if (!quote || !thesis || !selectedTopic) {
+			toast.error("Моля, попълнете всички полета.");
+			return;
+		}
+
+		grade({ quote, comment: thesis, text: selectedTopic });
+	};
+
 	return (
 		<Row style={{ width: "100%" }} $align="flex-start" $justify="space-between" $gap="4.8rem">
 			<Row $direction="column" $gap="1.6rem" $align="center" style={{ flex: 1 }}>
 				<Row $gap="1.6rem" style={{ width: "100%" }}>
-					<StyledInput placeholder="Напишете цитатът тук" />
-					<Dropdown style={{ maxWidth: "35%" }}>
+					<StyledInput
+						placeholder="Напишете цитатът тук"
+						value={quote}
+						onChange={(e) => {
+							setQuote(e.target.value);
+							onInput();
+						}}
+					/>
+					<Dropdown
+						style={{ maxWidth: "35%" }}
+						value={selectedTopic}
+						onChange={(e) => {
+							setSelectedTopic(e.target.value);
+							onInput();
+						}}
+					>
 						{options.map((option, index) => (
 							<Dropdown.Option key={index} value={option.value}>
 								{option.label}
@@ -53,25 +96,44 @@ function CommentForm() {
 						))}
 					</Dropdown>
 				</Row>
-				<StyledTextarea placeholder="Напишете тезата си тук" />
-				<Button>Провери</Button>
+				<StyledTextarea
+					placeholder="Напишете тезата си тук"
+					value={thesis}
+					onChange={(e) => {
+						setThesis(e.target.value);
+						onInput();
+					}}
+				/>
+				<Button onClick={handleSubmit} disabled={isLoading}>
+					{isLoading ? <SpinnerMini /> : "Провери"}
+				</Button>
 			</Row>
 			<Row style={{ flex: 1 }} $direction="column" $align="flex-start" $gap="0.4rem">
 				<Text>
 					<Text as="span" $weight="bold">
 						Оценка:
 					</Text>{" "}
-					5 / 6
+					{selectedComment ? selectedComment.points : 0} / 6
 				</Text>
 				<Text>
 					<Text as="span" $weight="bold">
 						Коментар:
 					</Text>{" "}
-					Тезата е логически изградена и вярно тълкува смисъла на цитата. Добре се открояват идейните внушения и ценностните послания. Липсва обаче изрично посочване на жанра и по-ясно разграничаване на ключовите думи и изразните средства. С малки допълнения текстът ще бъде отличен.
+					{selectedComment ? selectedComment.feedback : ""}
 				</Text>
 			</Row>
 		</Row>
 	);
 }
+CommentForm.propTypes = {
+	selectedComment: PropTypes.shape({
+		quote: PropTypes.string,
+		comment: PropTypes.string,
+		text: PropTypes.string,
+		points: PropTypes.number,
+		feedback: PropTypes.string,
+	}),
+	onInput: PropTypes.func,
+};
 
 export default CommentForm;

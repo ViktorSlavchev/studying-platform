@@ -1,34 +1,9 @@
 import Center from "../../ui/Center";
 import ExpandableText from "../../ui/ExpandableText";
 import Table from "../../ui/Table";
+import PropTypes from "prop-types";
 
-const dummyTheses = [
-	{
-		quote: "Боже, колко мъка има по тоя свят, боже!",
-		thesis: "С реторическото възклицание от разказа на Йордан Йовков „По жицата“ се внушава идеята за мъката, съчувствието и надеждата, които съпътстват човека през житейския му път. Човеколюбието и състраданието като нравствени ценности характеризират образа на Моканина. Обръщението му към бог е вопъл на отчаяние и безпомощност, които изразяват трагизма в човешката участ. Това е болезнена въздишка на съпреживяно нещастие по видяната човешка мъка. Светът се осмисля като алегория на човешкото страдание.",
-		score: 2,
-		selected: true,
-		id: 0,
-	},
-	{
-		quote: "Пътят е страшен, но славен",
-		thesis: "Посланията на стиха от поемата на Христо Ботев „На прощаване“ внушават категоричния и решителен избор на бунтовника да поеме по пътя на саможертвената гибел. С тази антитезисна метафора се разкрива идеята за извоюването на свободата като висш синовен дълг към народ и родина. Пътят на бунтовника е изпълнен с драматични предизвикателства, защото може да загине, като жертва живота си. Неговият саможертвен подвиг го обезсмъртява в народната памет, което показва най-висшия му идеал – да се бори и умре за свободата на отечеството си.",
-		score: 6,
-		selected: false,
-		id: 1,
-	},
-
-	{
-		quote: "Пътят е страшен, но славен",
-		thesis: "Посланията на стиха от поемата на Христо Ботев „На прощаване“ внушават категоричния и решителен избор на бунтовника да поеме по пътя на саможертвената гибел. С тази антитезисна метафора се разкрива идеята за извоюването на свободата като висш синовен дълг към народ и родина. Пътят на бунтовника е изпълнен с драматични предизвикателства, защото може да загине, като жертва живота си. Неговият саможертвен подвиг го обезсмъртява в народната памет, което показва най-висшия му идеал – да се бори и умре за свободата на отечеството си.",
-		score: 6,
-		selected: false,
-		id: 2,
-	},
-	// Add more dummy data as needed
-];
-
-function TableComments() {
+function TableComments({ comments, onClick, selected }) {
 	return (
 		<Table columns="4fr 6fr 1fr">
 			<Table.Header>
@@ -37,17 +12,35 @@ function TableComments() {
 				<Center>Точки</Center>
 			</Table.Header>
 			<Table.Body
-				data={dummyTheses}
-				render={(thesis) => (
-					<Table.Row key={thesis.id} $selected={thesis.selected}>
+				data={comments}
+				render={(thesis, ind) => (
+					<Table.Row
+						key={thesis["_id"]}
+						$selected={selected === ind}
+						onClick={() => {
+							onClick(ind);
+						}}
+					>
 						<div>{thesis.quote}</div>
-						<ExpandableText>{thesis.thesis}</ExpandableText>
-						<Center>{thesis.score}</Center>
+						<ExpandableText>{thesis.comment}</ExpandableText>
+						<Center>{thesis.points}</Center>
 					</Table.Row>
 				)}
 			></Table.Body>
 		</Table>
 	);
 }
+TableComments.propTypes = {
+	comments: PropTypes.arrayOf(
+		PropTypes.shape({
+			_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+			quote: PropTypes.node,
+			comment: PropTypes.node,
+			points: PropTypes.node,
+		})
+	).isRequired,
+	onClick: PropTypes.func.isRequired,
+	selected: PropTypes.number,
+};
 
 export default TableComments;

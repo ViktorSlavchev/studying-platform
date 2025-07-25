@@ -1,8 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchExamHistory } from "../../services/apiExams";
 import { handleApiError } from "../../utils/handleApiError";
+import { useNavigate } from "react-router";
 
 export function useExamHistory() {
+    const navigate = useNavigate();
+
     const { data: examsHistory, isLoading } = useQuery({
         queryKey: ["examHistory"],
         queryFn: fetchExamHistory,
@@ -10,7 +13,7 @@ export function useExamHistory() {
 
         onError: (error) => {
             console.error("Failed to fetch exam history:", error);
-            handleApiError(error, null, "/exams");
+            handleApiError(error, navigate, "/exams");
         }
     });
 
