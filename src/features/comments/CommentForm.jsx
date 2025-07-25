@@ -10,6 +10,7 @@ import PropTypes from "prop-types";
 import { useGrader } from "./useGrader";
 import SpinnerMini from "../../ui/SpinnerMini";
 import toast from "react-hot-toast";
+import { isGibberish } from "../../utils/isGibberish";
 
 const options = [
 	{ value: "Хайдути", label: "Хайдути" },
@@ -63,6 +64,25 @@ function CommentForm({ selectedComment, onInput }) {
 		e.preventDefault();
 		if (!quote || !thesis || !selectedTopic) {
 			toast.error("Моля, попълнете всички полета.");
+			return;
+		}
+
+		if (quote.length < 10) {
+			toast.error("Цитатът трябва да е поне 10 символа.");
+			return;
+		}
+
+		if (thesis.length < 60) {
+			toast.error("Тезата трябва да е поне 60 символа.");
+			return;
+		}
+
+		if (isGibberish(thesis)) {
+			toast.error("Тезата изглежда като безсмислица. Моля, опитайте отново.");
+			return;
+		}
+		if (isGibberish(quote)) {
+			toast.error("Цитатът изглежда като безсмислица. Моля, опитайте отново.");
 			return;
 		}
 
