@@ -17,6 +17,7 @@ import { litTopics } from "../utils/topics";
 import IconWrapper from "../ui/IconWrapper";
 import { useQuotes } from "../features/quotes/useQuotes";
 import { seededShuffle } from "../utils/seededShuffle";
+import { useSaveScore } from "../features/quotes/useSaveScore";
 
 // Storage helpers
 const STORAGE_KEY = "quotesGameState";
@@ -119,10 +120,12 @@ function QuotesGame() {
 	const timeoutRef = useRef(null);
 	const [hasLoadedState, setHasLoadedState] = useState(false);
 	const [shuffledQuotes, setShuffledQuotes] = useState([]);
+	const { saveScore, isLoading: isSavingScore } = useSaveScore();
 
 	const currentQuote = shuffledQuotes?.[currentQuoteIndex] ?? null;
 
 	const endGame = () => {
+		saveScore(loadGameState().score);
 		setGameStatus("completed");
 		clearGameState();
 		if (timeoutRef.current) {
@@ -196,7 +199,7 @@ function QuotesGame() {
 		}
 	}, [currentQuoteIndex, startedAt, answeredQuestions, score, gameStatus, hasLoadedState]);
 
-	if (isLoading || !hasLoadedState || !currentQuote) {
+	if (isLoading || !hasLoadedState || !currentQuote || isSavingScore) {
 		return <Spinner />;
 	}
 

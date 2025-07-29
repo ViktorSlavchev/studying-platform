@@ -22,3 +22,30 @@ export async function fetchQuotes() {
         throw error;
     }
 }
+
+
+export async function saveScore(score) {
+    try {
+        console.log('Saving score:', score);
+        const res = await fetch(`${API_URL}/quotes/save-score`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                score
+            })
+        });
+
+        if (!res.ok) {
+            throw new Error('Failed to save score');
+        }
+
+        const data = await res.json();
+        return data.data || {};
+    } catch (error) {
+        console.error('Error saving score:', error);
+        throw error;
+    }
+}
