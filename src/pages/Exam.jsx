@@ -60,7 +60,7 @@ function Exam() {
 					handleSubmit();
 				}, timeLeft);
 
-				console.log("Auto-submit timer set for:", new Date(startedTime + oneHour).toLocaleString());
+				// console.log("Auto-submit timer set for:", new Date(startedTime + oneHour).toLocaleString());
 			}
 
 			// Try to load saved answers from localStorage
@@ -70,7 +70,7 @@ function Exam() {
 				try {
 					const parsed = JSON.parse(savedAnswers);
 					if (Array.isArray(parsed) && parsed.length === examData.questions.length) {
-						console.log("Loaded saved answers from localStorage:", parsed, examData.questions);
+						// console.log("Loaded saved answers from localStorage:", parsed, examData.questions);
 						setAnswers(parsed);
 						return;
 					}
@@ -98,7 +98,7 @@ function Exam() {
 			}));
 			setAnswers(initialAnswers);
 			localStorage.setItem(`exam-answers-${examData._id}`, JSON.stringify(initialAnswers));
-			console.log("Initialized answers:", initialAnswers);
+			// console.log("Initialized answers:", initialAnswers);
 		},
 		[setAnswers, handleSubmit]
 	);
@@ -106,6 +106,11 @@ function Exam() {
 	useEffect(() => {
 		if (exam) {
 			onExamLoaded(exam);
+			if (exam.status === "grading") {
+				setTimeout(() => {
+					location.reload();
+				}, 4000);
+			}
 		}
 	}, [exam, onExamLoaded]);
 
@@ -126,13 +131,23 @@ function Exam() {
 		// Save answers to localStorage
 		if (answers.length === 0) return; // Don't save empty answers
 		localStorage.setItem(`exam-answers-${id}`, JSON.stringify(answers));
-		console.log("Answers saved to localStorage:", answers);
+		// console.log("Answers saved to localStorage:", answers);
 	}, [answers, id]);
 
 	if (isLoading) {
 		return <Spinner />;
 	}
 
+	if (exam.status === "grading") {
+		return (
+			<>
+				<Heading as="h2" style={{ textAlign: "center" }}>
+					Изпитът се проверява. Моля изчакайте.
+				</Heading>
+				<Spinner />
+			</>
+		);
+	}
 	return (
 		<>
 			<Heading>Изпит #{id}</Heading>
@@ -142,7 +157,7 @@ function Exam() {
 						<Question key={question["_id"]} question={question} num={ind} answers={answers} setAnswers={setAnswers} status={exam.status} />
 					))}
 					{<QuestionQuotes quotes={exam.quotes?.slice(0, 4)} answers={answers} setAnswers={setAnswers} status={exam.status} />}
-					{<QuestionLongAnswer question={exam.quotes?.slice(-1)[0]} answers={answers} setAnswers={setAnswers} />}
+					{<QuestionLongAnswer question={exam.quotes?.slice(-1)[0]} answers={answers} setAnswers={setAnswers} status={exam.status} />}
 				</QuestionHolder>
 
 				<RightColumn style={{ flex: 1, minWidth: "0" }}>

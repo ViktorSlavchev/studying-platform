@@ -20,8 +20,15 @@ const QuoteText = styled(Text)`
 	font-style: italic;
 `;
 
-function QuestionLongAnswer({ question, answers, setAnswers }) {
-	const [value, setValue] = useState("");
+function QuestionLongAnswer({ question, answers, setAnswers, status }) {
+	const currentAnswerObject = answers.find((a) => a.questionId === question["_id"]);
+	const currentAnswer = currentAnswerObject?.answer;
+
+	const points = currentAnswerObject?.points || 0;
+	const maxPoints = currentAnswerObject?.maxPoints || 0;
+	const correctAnswer = currentAnswerObject?.correctAnswer || "";
+
+	const [value, setValue] = useState(currentAnswer || "");
 
 	// Load existing answer for this question
 	useEffect(() => {
@@ -46,6 +53,17 @@ function QuestionLongAnswer({ question, answers, setAnswers }) {
 				<MultipleLines text={question.quote} />
 			</QuoteText>
 			<LongInput placeholder="Напишете тезата тук ..." value={value || ""} onChange={(e) => handleChange(e.target.value)} />
+
+			{status === "completed" && question.type !== "reading" && (
+				<Text $weight="bold" $color={points === maxPoints ? "green" : points === 0 ? "red" : "orange"}>
+					Точки: {points} / {maxPoints}
+				</Text>
+			)}
+			{status === "completed" && question.type !== "reading" && points !== maxPoints && (
+				<Text>
+					<span style={{ fontWeight: "700" }}>Коментар:</span> {correctAnswer}
+				</Text>
+			)}
 		</StyledQuestion>
 	);
 }
@@ -59,6 +77,7 @@ QuestionLongAnswer.propTypes = {
 	}),
 	answers: PropTypes.array.isRequired,
 	setAnswers: PropTypes.func.isRequired,
+	status: PropTypes.string.isRequired,
 };
 
 export default QuestionLongAnswer;
