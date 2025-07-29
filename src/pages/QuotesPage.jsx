@@ -5,6 +5,8 @@ import Row from "../ui/Row";
 import Text from "../ui/Text";
 import Button from "../ui/Button";
 import InstructionBox from "../features/quotes/InstructionBox";
+
+import ResultsChart from "../features/quotes/ResultsChart";
 import { useNavigate } from "react-router";
 
 const EntireRow = styled.div`
@@ -39,6 +41,7 @@ function QuotesPage() {
 				</Row>
 				<InstructionBox />
 			</EntireRow>
+			<ResultsChart />
 		</>
 	);
 }

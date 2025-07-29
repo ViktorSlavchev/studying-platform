@@ -124,8 +124,10 @@ function QuotesGame() {
 
 	const currentQuote = shuffledQuotes?.[currentQuoteIndex] ?? null;
 
-	const endGame = () => {
-		saveScore(loadGameState().score);
+	const endGame = (delta = 0) => {
+		const savedScore = loadGameState();
+
+		if (savedScore && !isSavingScore) saveScore(savedScore.score + delta);
 		setGameStatus("completed");
 		clearGameState();
 		if (timeoutRef.current) {
@@ -148,6 +150,7 @@ function QuotesGame() {
 				setCurrentQuoteIndex(currentQuoteIndex + 1);
 			} else {
 				setGameStatus("no-more-questions");
+				endGame(1);
 			}
 		} else {
 			setIsError(true);

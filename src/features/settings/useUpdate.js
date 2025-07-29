@@ -13,6 +13,7 @@ export function useUpdate() {
         mutationFn: (data) => updateUserApi(data),
         onSuccess: (user) => {
             queryClient.setQueryData(["user"], user);
+            queryClient.invalidateQueries(["quotes"]);
             navigate("/settings", { replace: true });
             toast.success("Профилът е променен успешно.");
         },
