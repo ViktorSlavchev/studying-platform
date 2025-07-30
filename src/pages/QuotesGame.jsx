@@ -200,7 +200,7 @@ function QuotesGame() {
 		timeoutRef.current = setTimeout(endGame, GAME_DURATION_MS);
 		saveGameState({ currentQuoteIndex: 0, startedAt: now, answeredQuestions: 0, score: 0, seed });
 		setHasLoadedState(true);
-	}, [quotes, isLoading]);
+	}, [quotes, isLoading]); //eslint-disable-line
 
 	// Reset previous guess when question changes
 	useEffect(() => {

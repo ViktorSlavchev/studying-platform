@@ -20,6 +20,7 @@ function TableComments({ comments, onClick, selected }) {
 						onClick={() => {
 							onClick(ind);
 						}}
+						style={{ cursor: "pointer" }}
 					>
 						<div>{thesis.quote}</div>
 						<ExpandableText>{thesis.comment}</ExpandableText>

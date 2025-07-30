@@ -8,6 +8,8 @@ import Text from "../../ui/Text";
 import Center from "../../ui/Center";
 import SLink from "../../ui/SLink";
 import IconWrapper from "../../ui/IconWrapper";
+import { useUser } from "../authentication/useUser";
+import includedWorkString from "../../utils/includedWorkString";
 
 const HeadingHolder = styled.div`
 	margin-bottom: 2.8rem;
@@ -27,6 +29,10 @@ const StyledInstructionsBox = styled(InfoBox)`
 `;
 
 function InstructionsBox() {
+	const { user, isLoading } = useUser();
+	const knownTopics = user?.knownTopics || [];
+	const includedWorksString = includedWorkString(knownTopics);
+
 	return (
 		<StyledInstructionsBox>
 			<HeadingHolder>
@@ -44,7 +50,7 @@ function InstructionsBox() {
 				<Text>
 					Включени произведения:{" "}
 					<Text $textstyle="italic" as="span">
-						от 5 клас, от 6 клас, от 7 клас - до Опълченците на Шипка
+						{isLoading ? "Зареждане..." : includedWorksString}
 					</Text>
 				</Text>
 			</HeadingHolder>
