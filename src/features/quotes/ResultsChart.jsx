@@ -4,9 +4,10 @@ import Spinner from "../../ui/Spinner";
 
 function ResultsChart() {
 	const { user, isLoading } = useUser();
-	const data = user.quotesScores.map((score, index) => ({
+	const data = user.quotesScores.map(({ score, correct }, index) => ({
 		name: `${index + 1}`,
-		value: score,
+		score,
+		correct,
 	}));
 
 	if (isLoading || !user) {
@@ -19,8 +20,9 @@ function ResultsChart() {
 				<LineChart data={data}>
 					<XAxis dataKey="name" />
 					<YAxis />
-					<Tooltip formatter={(value) => [`${value}`, "Резултат"]} />
-					<Line type="monotone" dataKey="value" stroke="var(--color-brand)" strokeWidth={3} dot={true} />
+					<Tooltip formatter={(value, name) => [`${value}`, name === "score" ? "Резултат" : "Познати"]} />
+					<Line type="monotone" dataKey="correct" stroke="#ff853a" strokeWidth={2} dot={true} />
+					<Line type="monotone" dataKey="score" stroke="var(--color-brand)" strokeWidth={4} dot={true} />
 				</LineChart>
 			</ResponsiveContainer>
 		</>

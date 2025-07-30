@@ -114,9 +114,11 @@ function QuotesGame() {
 	const [answer, setAnswer] = useState("");
 	const [startedAt, setStartedAt] = useState(new Date());
 	const [score, setScore] = useState(0);
+	const [totalAttempts, setTotalAttempts] = useState(0);
 	const [answeredQuestions, setAnsweredQuestions] = useState(0);
 	const [gameStatus, setGameStatus] = useState("in-progress");
 	const [isError, setIsError] = useState(false);
+	const [prevGuess, setPrevGuess] = useState("");
 	const timeoutRef = useRef(null);
 	const [hasLoadedState, setHasLoadedState] = useState(false);
 	const [shuffledQuotes, setShuffledQuotes] = useState([]);
@@ -125,9 +127,13 @@ function QuotesGame() {
 	const currentQuote = shuffledQuotes?.[currentQuoteIndex] ?? null;
 
 	const endGame = (delta = 0) => {
-		const savedScore = loadGameState();
+		if (isSavingScore) return; // Prevent multiple saves
 
-		if (savedScore && !isSavingScore) saveScore(savedScore.score + delta);
+		const savedScore = loadGameState()?.score + delta;
+		const savedTotalAttempts = loadGameState()?.totalAttempts + delta;
+
+		if (savedScore) saveScore({ correct: savedScore, score: Math.round((savedScore * savedScore) / savedTotalAttempts) || 0 });
+
 		setGameStatus("completed");
 		clearGameState();
 		if (timeoutRef.current) {
@@ -136,15 +142,20 @@ function QuotesGame() {
 	};
 
 	const handleSubmitAnswer = () => {
-		if (!answer.trim()) return;
+		if (!answer.trim() || isError || answer.toLowerCase().trim() === prevGuess) return;
+
+		// Check if this is the same as the previous incorrect guess
+		if (answer.toLowerCase().trim() === prevGuess.toLowerCase().trim()) return;
 
 		const isCorrect = answer.toLowerCase().trim() === currentQuote.answer.toLowerCase().trim();
 
 		if (isCorrect) {
 			setScore(score + 1);
+			setTotalAttempts(totalAttempts + 1);
 			setAnsweredQuestions(answeredQuestions + 1);
 			setAnswer("");
 			setIsError(false);
+			setPrevGuess(""); // Reset previous guess on correct answer
 
 			if (currentQuoteIndex < quotes.length - 1) {
 				setCurrentQuoteIndex(currentQuoteIndex + 1);
@@ -153,7 +164,9 @@ function QuotesGame() {
 				endGame(1);
 			}
 		} else {
+			setPrevGuess(answer.toLowerCase().trim()); // Save the incorrect guess
 			setIsError(true);
+			setTotalAttempts(totalAttempts + 1);
 			setTimeout(() => setIsError(false), 500);
 		}
 	};
@@ -170,6 +183,7 @@ function QuotesGame() {
 				setCurrentQuoteIndex(saved.currentQuoteIndex || 0);
 				setAnsweredQuestions(saved.answeredQuestions || 0);
 				setScore(saved.score || 0);
+				setTotalAttempts(saved.totalAttempts || 0);
 				setShuffledQuotes(seededShuffle(quotes, saved.seed));
 				const remainingTime = GAME_DURATION_MS - timeElapsed;
 				timeoutRef.current = setTimeout(endGame, remainingTime);
@@ -188,6 +202,11 @@ function QuotesGame() {
 		setHasLoadedState(true);
 	}, [quotes, isLoading]);
 
+	// Reset previous guess when question changes
+	useEffect(() => {
+		setPrevGuess("");
+	}, [currentQuoteIndex]);
+
 	// Save game state periodically
 	useEffect(() => {
 		if (gameStatus === "in-progress" && hasLoadedState) {
@@ -198,9 +217,10 @@ function QuotesGame() {
 				answeredQuestions,
 				score,
 				seed: saved?.seed || 0, // fallback if ever missing
+				totalAttempts,
 			});
 		}
-	}, [currentQuoteIndex, startedAt, answeredQuestions, score, gameStatus, hasLoadedState]);
+	}, [currentQuoteIndex, startedAt, answeredQuestions, score, gameStatus, hasLoadedState, totalAttempts]);
 
 	if (isLoading || !hasLoadedState || !currentQuote || isSavingScore) {
 		return <Spinner />;
@@ -216,7 +236,12 @@ function QuotesGame() {
 							<Text style={{ textAlign: "center" }} $weight="bold" $size="2rem">
 								Верни отговори: {score}
 							</Text>
-
+							<Text style={{ textAlign: "center" }} $weight="bold" $size="2rem">
+								Успеваемост: {Math.round((score / totalAttempts) * 100) || 0}%
+							</Text>
+							<Text style={{ textAlign: "center" }} $weight="bold" $size="2rem">
+								Резултат: {Math.round((score * score) / totalAttempts) || 0}
+							</Text>
 							<SLink to="/quotes" style={{ textAlign: "center" }}>
 								Назад{"  "}
 								<IconWrapper $inheritsize={true}>

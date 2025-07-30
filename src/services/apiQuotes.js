@@ -24,9 +24,9 @@ export async function fetchQuotes() {
 }
 
 
-export async function saveScore(score) {
+export async function saveScore({ score, correct }) {
     try {
-        console.log('Saving score:', score);
+        console.log('Saving score:', score, correct);
         const res = await fetch(`${API_URL}/quotes/save-score`, {
             method: 'POST',
             credentials: 'include',
@@ -34,7 +34,8 @@ export async function saveScore(score) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                score
+                score: score || 0,
+                correct: correct || 0,
             })
         });
 

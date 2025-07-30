@@ -9,8 +9,9 @@ export function useSaveScore() {
     const navigate = useNavigate();
 
     const { mutate: saveScore, isLoading } = useMutation({
-        mutationFn: (score) => {
-            saveScoreApi(score);
+        mutationFn: ({ score, correct }) => {
+            if (!score) score = 0;
+            saveScoreApi({ score, correct });
         },
 
         onSuccess: () => {
