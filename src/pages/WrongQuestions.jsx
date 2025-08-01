@@ -9,7 +9,7 @@ import WrongQuestion from "../features/mistaken/WrongQuestion";
 import QuestionHolder from "../features/exam/QuestionHolder";
 import Spinner from "../ui/Spinner";
 import { belTopics, litTopics } from "../utils/topics";
-import { useMistakenQuestions } from "../features/mistaken/useMistakenQuestions";
+import { useMistakenQuestions, useDeleteMistakenQuestion } from "../features/mistaken/useMistakenQuestions";
 
 const RightColumn = styled.div`
 	display: flex;
@@ -60,13 +60,13 @@ const TopicTitle = styled(Text)`
 
 function WrongQuestions() {
 	const { mistakenQuestions, isLoading } = useMistakenQuestions();
+	const { deleteMistaken, isDeleting } = useDeleteMistakenQuestion();
 	const [activeCategory, setActiveCategory] = useState("Български език");
 	const sectionRefs = useRef({});
 
-	// Handle deleting a question (placeholder for now)
+	// Handle deleting a question
 	const handleDeleteQuestion = (questionId) => {
-		console.log("Delete question:", questionId);
-		// TODO: Implement actual deletion logic
+		deleteMistaken(questionId);
 	};
 
 	// Categorize questions based on topic
@@ -165,7 +165,7 @@ function WrongQuestions() {
 							<TopicSection key={topic} ref={(el) => (sectionRefs.current[topic] = el)}>
 								<TopicTitle>{topic}</TopicTitle>
 								{questions.map((question, index) => (
-									<WrongQuestion key={question._id} question={question} num={index + 1} onDelete={handleDeleteQuestion} />
+									<WrongQuestion key={question._id} question={question} num={index + 1} onDelete={handleDeleteQuestion} isDeleting={isDeleting} />
 								))}
 							</TopicSection>
 						))

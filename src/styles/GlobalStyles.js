@@ -12,6 +12,17 @@ const GlobalStyles = createGlobalStyle`
         --color-red-700: #B20000;
         --color-red-800: #A00000;
 
+        --color-grey-100: #F3F4F6;
+        --color-grey-200: #E5E7EB;
+        --color-grey-300: #D1D5DB;
+        --color-grey-500: #6B7280;
+        --color-grey-600: #4B5563;
+        --color-grey-700: #374151;
+        --color-grey-800: #1F2937;
+        --color-grey-900: #111827;
+
+        
+
         --color-border:rgba(0, 8, 12, 0.1);
 
         --color-text-dark: #00344d;
