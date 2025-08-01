@@ -20,7 +20,7 @@ function Nav() {
 					<NavElement to={"/home"} icon={<HomeIcon />} label={"Начало"} />
 					<NavElement to={"/exams"} icon={<ClipboardDocumentListIcon />} label={"Пробни изпити"} />
 					<NavElement to={"/comment"} icon={<CheckCircleIcon />} label={"Проверка на теза"} />
-					<NavElement to={"/mistakes"} icon={<XCircleIcon />} label={"Сгрешени въпроси"} />
+					<NavElement to={"/mistakes"} icon={<XCircleIcon />} label={"Предишни грешки"} />
 					<NavElement to={"/daily"} icon={<PuzzlePieceIcon />} label={"Дневна мисия"} />
 					<NavElement to={"/quotes"} icon={<ChatBubbleLeftEllipsisIcon />} label={"Цитати"} />
 					<NavElement to={"/ai"} icon={<QuestionMarkCircleIcon />} label={"Питай AI"} />

@@ -9,6 +9,8 @@ const GlobalStyles = createGlobalStyle`
         --color-brand-disabled: #73c5ec;
 
         --color-red: #D80000;
+        --color-red-700: #B20000;
+        --color-red-800: #A00000;
 
         --color-border:rgba(0, 8, 12, 0.1);
 
