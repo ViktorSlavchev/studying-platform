@@ -5,7 +5,7 @@ import QuestionShortAnswer from "../exam/QuestionShortAnswer";
 import QuestionEditing from "../exam/QuestionEditing";
 import QuestionReading from "../exam/QuestionReading";
 
-function QuestionRenderer({ question, answer, onAnswer }) {
+function QuestionRenderer({ question, answer, onAnswer, status = "in-progress" }) {
 	switch (question.type) {
 		case "options":
 			return <QuestionOptions question={question} answer={answer} onAnswer={onAnswer} />;
@@ -14,7 +14,7 @@ function QuestionRenderer({ question, answer, onAnswer }) {
 			return <QuestionShortAnswer question={question} answer={answer} onAnswer={onAnswer} />;
 
 		case "editing":
-			return <QuestionEditing status="in-progress" question={question} answer={answer} onAnswer={onAnswer} />;
+			return <QuestionEditing status={status} question={question} answer={answer} onAnswer={onAnswer} />;
 
 		case "reading":
 			return <QuestionReading question={question} />;
@@ -30,6 +30,6 @@ QuestionRenderer.propTypes = {
 	}).isRequired,
 	answer: PropTypes.any,
 	onAnswer: PropTypes.func,
+	status: PropTypes.string,
 };
-
 export default QuestionRenderer;

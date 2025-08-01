@@ -71,5 +71,5 @@ export function isAnswerCorrect(question, userAnswer) {
  * Check if question needs reading text (for "Анализ на текст" questions)
  */
 export function questionNeedsReading(question) {
-    return question.topic === "Анализ на текст" && question.parentReading;
+    return !!(question.parentReading && question.topic === "Анализ на текст");
 }

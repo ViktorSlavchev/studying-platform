@@ -1,63 +1,54 @@
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import React from "react";
 
 import InfoBox from "../../ui/InfoBox";
-import QuestionOptions from "./QuestionOptions";
 import Text from "../../ui/Text";
-import QuestionShortAnswer from "./QuestionShortAnswer";
-import QuestionEditing from "./QuestionEditing";
-import QuestionReading from "./QuestionReading";
-import React from "react";
+import QuestionRenderer from "../mistaken/QuestionRenderer";
+import ExamQuestionFeedback from "./ExamQuestionFeedback";
+import { useExamQuestionState } from "./useExamQuestionState";
 
 const StyledQuestion = styled(InfoBox)`
 	display: flex;
 	gap: 1rem;
 	flex-direction: column;
-
 	padding-top: 1.6rem;
 	padding-bottom: 1.6rem;
 `;
 
-const CASpan = styled.span`
-	font-weight: 700;
-`;
 function Question({ question, num, answers, setAnswers, status }) {
-	const currentAnswerObject = answers.find((a) => a.questionId === question["_id"]);
-	const currentAnswer = currentAnswerObject?.answer;
-
-	const points = currentAnswerObject?.points || 0;
-	const maxPoints = currentAnswerObject?.maxPoints || 0;
-	const correctAnswer = currentAnswerObject?.correctAnswer || "";
+	const { currentAnswer, points, maxPoints, correctAnswer } = useExamQuestionState(question, answers);
 
 	function handleAnswerChange(answer) {
 		if (status === "completed") return; // Do not allow changes if the exam is completed
 
-		// check if an answer is given;
-		if (currentAnswerObject) {
-			setAnswers((prev) => prev.map((a) => (a.questionId === question["_id"] ? { ...a, answer } : a)));
+		// Update answers array
+		const existingAnswer = answers.find((a) => a.questionId === question._id);
+
+		if (existingAnswer) {
+			setAnswers((prev) => prev.map((a) => (a.questionId === question._id ? { ...a, answer } : a)));
 		} else {
-			setAnswers((prev) => [...prev, { questionId: question["_id"], answer, questionNum: num }]);
+			setAnswers((prev) => [
+				...prev,
+				{
+					questionId: question._id,
+					answer,
+					questionNum: num,
+				},
+			]);
 		}
 	}
 
 	return (
 		<StyledQuestion>
-			{question.type !== "reading" && <Text $weight={"bold"}>{num} задача.</Text>}
-			{question.type === "options" && <QuestionOptions question={question} answer={currentAnswer} onAnswer={handleAnswerChange} />}
-			{question.type === "shortAnswer" && <QuestionShortAnswer question={question} answer={currentAnswer} onAnswer={handleAnswerChange} />}
-			{question.type === "editing" && <QuestionEditing status={status} question={question} answer={currentAnswer} onAnswer={handleAnswerChange} />}
-			{question.type === "reading" && <QuestionReading question={question} />}
+			{/* Question number */}
+			{question.type !== "reading" && <Text $weight="bold">{num} задача.</Text>}
 
-			{status === "completed" && question.type !== "reading" && (
-				<Text $weight="bold" $color={points === maxPoints ? "green" : points === 0 ? "red" : "orange"}>
-					Точки: {points} / {maxPoints}
-				</Text>
-			)}
-			{status === "completed" && question.type !== "reading" && points !== maxPoints && (
-				<Text>
-					<CASpan>Правилен отговор:</CASpan> {correctAnswer}
-				</Text>
-			)}
+			{/* Question renderer */}
+			<QuestionRenderer question={question} answer={currentAnswer} onAnswer={handleAnswerChange} status={status} />
+
+			{/* Exam feedback */}
+			{question.type !== "reading" && <ExamQuestionFeedback status={status} points={points} maxPoints={maxPoints} correctAnswer={correctAnswer} />}
 		</StyledQuestion>
 	);
 }

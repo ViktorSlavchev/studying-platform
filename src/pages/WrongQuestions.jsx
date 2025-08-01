@@ -73,7 +73,7 @@ function WrongQuestions() {
 	const categorizeQuestion = (question) => {
 		if (!question.topic) return "Други";
 
-		if (belTopics.includes(question.topic) || question.topic === "Анализ на текст" || question.topic === "Редактиране на текст") {
+		if (belTopics.includes(question.topic) || ["Връзки между думи", "Анализ на текст", "Редактиране на текст"].includes(question.topic)) {
 			return "Български език";
 		} else if (litTopics.includes(question.topic)) {
 			// Check if showTheme is false for literature questions
@@ -99,7 +99,7 @@ function WrongQuestions() {
 
 	// Get all topics for current category
 	const getTopicsForCategory = (category) => {
-		if (category === "Български език") return [...belTopics, "Анализ на текст", "Редактиране на текст"];
+		if (category === "Български език") return [...belTopics, "Анализ на текст", "Редактиране на текст", "Връзки между думи"];
 		if (category === "Литература") return litTopics;
 		return [];
 	};
