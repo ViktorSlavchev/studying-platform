@@ -161,14 +161,16 @@ function WrongQuestions() {
 							<Text style={{ textAlign: "center", padding: "2rem" }}>Няма грешни отговори за категория &ldquo;{activeCategory}&rdquo;</Text>
 						</InfoBox>
 					) : (
-						Object.entries(questionsGrouped).map(([topic, questions]) => (
-							<TopicSection key={topic} ref={(el) => (sectionRefs.current[topic] = el)}>
-								<TopicTitle>{topic}</TopicTitle>
-								{questions.map((question, index) => (
-									<WrongQuestion key={question._id} question={question} num={index + 1} onDelete={handleDeleteQuestion} isDeleting={isDeleting} />
-								))}
-							</TopicSection>
-						))
+						currentTopics
+							.filter((topic) => questionsGrouped[topic])
+							.map((topic) => (
+								<TopicSection key={topic} ref={(el) => (sectionRefs.current[topic] = el)}>
+									<TopicTitle>{topic}</TopicTitle>
+									{questionsGrouped[topic].map((question, index) => (
+										<WrongQuestion key={question._id} question={question} num={index + 1} onDelete={handleDeleteQuestion} isDeleting={isDeleting} />
+									))}
+								</TopicSection>
+							))
 					)}
 				</QuestionHolder>
 
