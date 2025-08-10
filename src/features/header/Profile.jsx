@@ -15,6 +15,22 @@ const StyledProfile = styled(Link)`
 	cursor: pointer;
 `;
 
+const ProfileRow = styled(Row)`
+	/* Reduce spacing on mobile */
+	@media (max-width: 479px) {
+		gap: 1rem;
+	}
+`;
+
+const NameRow = styled(Row)`
+	/* Hide name on very small screens, keep only icon */
+	@media (max-width: 379px) {
+		span {
+			display: none;
+		}
+	}
+`;
+
 function Profile() {
 	const queryClient = useQueryClient();
 	const name = queryClient.getQueryData(["user"])?.name;
@@ -26,13 +42,13 @@ function Profile() {
 
 	return (
 		<StyledProfile to={"/settings"}>
-			<Row $gap="1.6rem">
-				<Row $gap="1rem">
+			<ProfileRow $gap="1.6rem">
+				<NameRow $gap="1rem">
 					<Text>{name || ""}</Text>
 					<IconWrapper $sz="md">
 						<UserCircleIcon strokeWidth={0.9} />
 					</IconWrapper>
-				</Row>
+				</NameRow>
 
 				{isLoading ? (
 					<SpinnerMini />
@@ -41,7 +57,7 @@ function Profile() {
 						<ArrowRightStartOnRectangleIcon strokeWidth={0.9} />
 					</IconWrapper>
 				)}
-			</Row>
+			</ProfileRow>
 		</StyledProfile>
 	);
 }

@@ -9,8 +9,27 @@ const StyledLogo = styled.div`
 `;
 
 const Img = styled.img`
-	/* height: 9.6rem; */
 	height: 15vh;
+
+	/* Smaller logo on mobile */
+	@media (max-width: 768px) {
+		height: 12vh;
+	}
+
+	@media (max-width: 479px) {
+		height: 10vh;
+	}
+`;
+
+const ResponsiveHeading = styled(Heading)`
+	/* Smaller heading on mobile */
+	@media (max-width: 768px) {
+		font-size: 2.4rem !important;
+	}
+
+	@media (max-width: 479px) {
+		font-size: 2rem !important;
+	}
 `;
 
 function Logo() {
@@ -19,9 +38,9 @@ function Logo() {
 	return (
 		<StyledLogo onClick={() => navigate("/home")}>
 			<Img src="/src/assets/logo.png" alt="Logo" />
-			<Heading as="h1" $textalign="center">
+			<ResponsiveHeading as="h1" $textalign="center">
 				НВО
-			</Heading>
+			</ResponsiveHeading>
 		</StyledLogo>
 	);
 }

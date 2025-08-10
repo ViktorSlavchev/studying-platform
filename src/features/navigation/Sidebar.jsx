@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Logo from "../../ui/Logo";
 import Nav from "./Nav";
-import Breakpoints from "../../styles/breakpoints";
+import mediaQueries from "../../styles/breakpoints";
 
 const StyledSidebar = styled.aside`
 	display: flex;
@@ -17,12 +17,17 @@ const StyledSidebar = styled.aside`
 	border-right: 2px solid var(--color-border);
 	grid-row: 1 / -1;
 
-	@media (max-width: ${Breakpoints.xl}px) {
+	${mediaQueries.large} {
 		gap: 2rem;
 	}
 
-	@media (max-width: ${Breakpoints.lg}px) {
+	${mediaQueries.desktop} {
 		gap: 1rem;
+	}
+
+	/* Hide sidebar below desktop breakpoint (1024px) */
+	@media (max-width: 1023px) {
+		display: none;
 	}
 `;
 

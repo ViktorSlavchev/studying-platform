@@ -16,7 +16,7 @@ const RightColumn = styled.div`
 	flex-direction: column;
 	gap: 1.6rem;
 	align-self: flex-start;
-	position: sticky;
+	/* position: sticky; */
 	top: 2rem;
 `;
 

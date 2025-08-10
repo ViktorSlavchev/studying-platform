@@ -6,6 +6,28 @@ import IconWrapper from "../../ui/IconWrapper";
 import Row from "../../ui/Row";
 import Text from "../../ui/Text";
 
+const MobileResponsiveRow = styled(Row)`
+	/* Adjust gap for smaller screens */
+	@media (max-width: 768px) {
+		gap: 0.8rem !important;
+	}
+
+	@media (max-width: 479px) {
+		gap: 0.6rem !important;
+	}
+`;
+
+const ResponsiveText = styled(Text)`
+	/* Responsive font sizes */
+	@media (max-width: 768px) {
+		font-size: 1.6rem !important;
+	}
+
+	@media (max-width: 479px) {
+		font-size: 1.4rem !important;
+	}
+`;
+
 const StyledNavLink = styled(NavLink)`
 	&:link,
 	&:visited {
@@ -36,22 +58,48 @@ const StyledNavLink = styled(NavLink)`
 	&.active:visited svg {
 		color: var(--color-brand);
 	}
+
+	/* Mobile-friendly adjustments */
+	@media (max-width: 768px) {
+		&:link,
+		&:visited {
+			font-size: 1.8rem;
+			padding: 1rem 0.4rem 1rem 2rem;
+			gap: 1rem;
+		}
+	}
+
+	@media (max-width: 479px) {
+		&:link,
+		&:visited {
+			font-size: 1.6rem;
+			padding: 0.8rem 0.4rem 0.8rem 1.6rem;
+			gap: 0.8rem;
+		}
+	}
 `;
 
 NavElement.propTypes = {
 	to: PropTypes.string.isRequired,
 	icon: PropTypes.node.isRequired,
 	label: PropTypes.string.isRequired,
+	onNavigate: PropTypes.func,
 };
 
-function NavElement({ to, icon, label }) {
+function NavElement({ to, icon, label, onNavigate }) {
+	const handleClick = () => {
+		if (onNavigate) {
+			onNavigate();
+		}
+	};
+
 	return (
 		<li>
-			<StyledNavLink to={to}>
-				<Row $justify={"flex-start"} $align={"center"} $gap={"1rem"}>
+			<StyledNavLink to={to} onClick={handleClick}>
+				<MobileResponsiveRow $justify={"flex-start"} $align={"center"} $gap={"1rem"}>
 					<IconWrapper>{icon}</IconWrapper>
-					<Text $size={"1.8rem"}>{label}</Text>
-				</Row>
+					<ResponsiveText $size={"1.8rem"}>{label}</ResponsiveText>
+				</MobileResponsiveRow>
 			</StyledNavLink>
 		</li>
 	);
