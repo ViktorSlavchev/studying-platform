@@ -110,7 +110,7 @@ const MobileNavPanel = styled.aside`
 	align-items: center;
 	justify-content: space-between;
 	gap: 3rem;
-	padding: 3rem 0 1.2rem;
+	/* padding: 3rem 0 1.2rem; */
 
 	position: relative;
 	overflow: hidden;
@@ -134,14 +134,14 @@ const MobileNavPanel = styled.aside`
 		width: 85vw;
 		max-width: 28rem;
 		gap: 2rem;
-		padding: 2rem 0 1rem;
+		/* padding: 2rem 0 1rem; */
 	}
 
 	@media (max-width: 479px) {
 		width: 90vw;
 		max-width: 30rem;
 		gap: 1.5rem;
-		padding: 1.5rem 0 1rem;
+		/* padding: 1.5rem 0 1rem; */
 	}
 `;
 
@@ -183,8 +183,8 @@ const NavContent = styled.div`
 	gap: 4rem;
 	width: 100%;
 	flex-grow: 1;
-	padding: 2rem 1.5rem;
-	border-radius: 2rem;
+	padding: 2rem 0;
+	/* border-radius: 2rem; */
 	background: rgba(255, 255, 255, 0.1);
 	backdrop-filter: blur(10px);
 	border: 1px solid rgba(255, 255, 255, 0.2);
@@ -195,12 +195,12 @@ const NavContent = styled.div`
 	/* Reduce gap on smaller screens */
 	@media (max-width: 768px) {
 		gap: 2.5rem;
-		padding: 1.5rem 1rem;
+		padding: 1.5rem 0;
 	}
 
 	@media (max-width: 479px) {
 		gap: 2rem;
-		padding: 1rem 0.8rem;
+		padding: 1rem 0;
 	}
 `;
 

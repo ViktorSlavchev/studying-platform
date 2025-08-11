@@ -8,6 +8,11 @@ const StyledTable = styled.div`
 	border-radius: var(--border-radius-md);
 	overflow: hidden;
 	width: 100%;
+
+	/* Even smaller on mobile for better fit */
+	@media (max-width: 768px) {
+		font-size: 1.4rem;
+	}
 `;
 
 const CommonRow = styled.div`
@@ -27,7 +32,18 @@ const StyledHeader = styled(CommonRow)`
 	font-weight: bold;
 	color: var(--color-text-dark);
 	opacity: 0.6;
-	font-size: 1.2rem;
+	font-size: 1.1rem;
+
+	/* Responsive header font */
+	@media (max-width: 768px) {
+		font-size: 1rem;
+		padding: 1.4rem 1.8rem;
+	}
+
+	@media (max-width: 479px) {
+		font-size: 0.9rem;
+		padding: 1.2rem 1.5rem;
+	}
 `;
 
 const StyledRow = styled(CommonRow)`
@@ -38,6 +54,15 @@ const StyledRow = styled(CommonRow)`
 	}
 
 	transition: all 0.2s ease-in-out;
+
+	/* Responsive row padding */
+	@media (max-width: 768px) {
+		padding: 1rem 1.8rem;
+	}
+
+	@media (max-width: 479px) {
+		padding: 0.8rem 1.5rem;
+	}
 
 	${(props) =>
 		props.$selected &&

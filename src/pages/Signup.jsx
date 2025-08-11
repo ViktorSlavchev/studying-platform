@@ -14,6 +14,22 @@ const SignupLayout = styled.main`
 	justify-content: center;
 	gap: 3.2rem;
 	background-color: var(--bg-color);
+	padding: 2rem;
+
+	/* Mobile responsive */
+	@media (max-width: 768px) {
+		grid-template-columns: 1fr;
+		max-width: 42rem;
+		width: 100%;
+		padding: 2rem 1.5rem;
+		gap: 2.5rem;
+	}
+
+	@media (max-width: 479px) {
+		padding: 1.5rem 1rem;
+		gap: 2rem;
+		max-width: 100%;
+	}
 `;
 
 function Signup() {

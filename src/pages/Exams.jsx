@@ -28,6 +28,17 @@ const EntireRow = styled.div`
 	@media (max-width: ${Breakpoints.md}px) {
 		gap: 3rem;
 	}
+
+	/* Mobile: Stack vertically instead of side-by-side */
+	@media (max-width: 768px) {
+		flex-direction: column;
+		gap: 3rem;
+	}
+
+	@media (max-width: 479px) {
+		gap: 2rem;
+		margin-bottom: 4rem;
+	}
 `;
 
 function Exams() {

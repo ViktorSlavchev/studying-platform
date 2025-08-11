@@ -45,6 +45,33 @@ const StyledTextarea = styled(Textarea)`
 	height: 16rem;
 `;
 
+const ResponsiveRow = styled(Row)`
+	width: 100%;
+
+	margin-bottom: 4.8rem;
+
+	@media (max-width: 768px) {
+		flex-direction: column !important;
+		gap: 3rem !important;
+	}
+`;
+
+const FormSection = styled(Row)`
+	flex: 1;
+
+	@media (max-width: 768px) {
+		width: 100%;
+	}
+`;
+
+const FeedbackSection = styled(Row)`
+	flex: 1;
+
+	@media (max-width: 768px) {
+		width: 100%;
+	}
+`;
+
 function CommentForm({ selectedComment, onInput }) {
 	const [quote, setQuote] = useState("");
 	const [thesis, setThesis] = useState("");
@@ -90,8 +117,8 @@ function CommentForm({ selectedComment, onInput }) {
 	};
 
 	return (
-		<Row style={{ width: "100%" }} $align="flex-start" $justify="space-between" $gap="4.8rem">
-			<Row $direction="column" $gap="1.6rem" $align="center" style={{ flex: 1 }}>
+		<ResponsiveRow $align="flex-start" $justify="space-between" $gap="4.8rem">
+			<FormSection $direction="column" $gap="1.6rem" $align="center">
 				<Row $gap="1.6rem" style={{ width: "100%" }}>
 					<StyledInput
 						placeholder="Напишете цитатът тук"
@@ -127,8 +154,8 @@ function CommentForm({ selectedComment, onInput }) {
 				<Button onClick={handleSubmit} disabled={isLoading}>
 					{isLoading ? <SpinnerMini /> : "Провери"}
 				</Button>
-			</Row>
-			<Row style={{ flex: 1 }} $direction="column" $align="flex-start" $gap="0.4rem">
+			</FormSection>
+			<FeedbackSection $direction="column" $align="flex-start" $gap="0.4rem">
 				<Text>
 					<Text as="span" $weight="bold">
 						Оценка:
@@ -141,8 +168,8 @@ function CommentForm({ selectedComment, onInput }) {
 					</Text>{" "}
 					{selectedComment ? selectedComment.feedback : ""}
 				</Text>
-			</Row>
-		</Row>
+			</FeedbackSection>
+		</ResponsiveRow>
 	);
 }
 CommentForm.propTypes = {

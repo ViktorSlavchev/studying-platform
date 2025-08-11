@@ -22,7 +22,7 @@ function TableComments({ comments, onClick, selected }) {
 						}}
 						style={{ cursor: "pointer" }}
 					>
-						<div>{thesis.quote}</div>
+						<ExpandableText>{thesis.quote}</ExpandableText>
 						<ExpandableText>{thesis.comment}</ExpandableText>
 						<Center>{thesis.points}</Center>
 					</Table.Row>

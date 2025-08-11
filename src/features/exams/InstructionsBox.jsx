@@ -14,6 +14,31 @@ import includedWorkString from "../../utils/includedWorkString";
 
 const HeadingHolder = styled.div`
 	margin-bottom: 2.8rem;
+
+	&:not(:first-child) {
+		margin-bottom: 2rem;
+	}
+
+	/* Better spacing on mobile */
+	@media (max-width: 768px) {
+		margin-bottom: 2rem;
+
+		&:not(:first-child) {
+			margin-bottom: 1.5rem;
+		}
+	}
+`;
+
+const InfoSection = styled.div`
+	display: flex;
+	flex-direction: column;
+	gap: 0.8rem;
+	margin-bottom: 1.5rem;
+
+	@media (max-width: 768px) {
+		gap: 0.6rem;
+		margin-bottom: 1.2rem;
+	}
 `;
 
 const StyledInstructionsBox = styled(InfoBox)`
@@ -26,6 +51,19 @@ const StyledInstructionsBox = styled(InfoBox)`
 
 	@media (max-width: ${Breakpoints.md}px) {
 		min-width: 24rem;
+	}
+
+	/* Mobile: Remove fixed width to prevent horizontal scroll */
+	@media (max-width: 768px) {
+		min-width: unset;
+		width: 100%;
+		max-width: 100%;
+		padding: 2rem 1.5rem;
+		box-sizing: border-box;
+	}
+
+	@media (max-width: 479px) {
+		padding: 1.5rem 1rem;
 	}
 `;
 
@@ -42,7 +80,7 @@ function InstructionsBox() {
 					Формат
 				</Heading>
 			</HeadingHolder>
-			<HeadingHolder>
+			<InfoSection>
 				<Text>
 					Време:{" "}
 					<Text $textstyle="italic" as="span">
@@ -61,7 +99,7 @@ function InstructionsBox() {
 						{isLoading ? "Зареждане..." : includedWorksString}
 					</Text>
 				</Text>
-			</HeadingHolder>
+			</InfoSection>
 			<Center>
 				<SLink to="/settings" $align="center">
 					<span>Промени произведенията </span>
