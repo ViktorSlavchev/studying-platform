@@ -64,7 +64,7 @@ const StyledNavLink = styled(NavLink)`
 		&:link,
 		&:visited {
 			font-size: 1.8rem;
-			padding: 1rem 0.4rem 1rem 2rem;
+			padding: 1.4rem 1.6rem;
 			gap: 1rem;
 		}
 	}
@@ -73,7 +73,7 @@ const StyledNavLink = styled(NavLink)`
 		&:link,
 		&:visited {
 			font-size: 1.6rem;
-			padding: 0.8rem 0.4rem 0.8rem 1.6rem;
+			padding: 1.2rem 1.4rem;
 			gap: 0.8rem;
 		}
 	}

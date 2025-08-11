@@ -4,7 +4,11 @@ const GlobalStyles = createGlobalStyle`
     :root {
         --color-brand: #0095DC;
         --color-brand-50: #D9F2FD;
+        --color-brand-200: #A3D9F7;
+        --color-brand-400: #4BB8EA;
+        --color-brand-500: #0095DC;
         --color-brand-600: #0086c6;
+        --color-brand-700: #0077B0;
 
         --color-brand-disabled: #73c5ec;
 
