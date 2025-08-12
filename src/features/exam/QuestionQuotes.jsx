@@ -14,6 +14,22 @@ const StyledQuestion = styled(InfoBox)`
 
 	padding-top: 1.6rem;
 	padding-bottom: 1.6rem;
+
+	/* Mobile responsive font sizing */
+	@media (max-width: 768px) {
+		font-size: 1.4rem;
+
+		/* Make all text content smaller on mobile */
+		* {
+			font-size: inherit;
+		}
+	}
+
+	@media (max-width: 479px) {
+		font-size: 1.3rem;
+		padding: 1.2rem;
+		gap: 0.8rem;
+	}
 `;
 
 const QuoteHolder = styled.div`
