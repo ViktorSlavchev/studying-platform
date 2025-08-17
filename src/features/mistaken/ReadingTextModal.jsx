@@ -12,6 +12,7 @@ const ReadingButton = styled(Button)`
 	top: 1.6rem;
 	right: 1.6rem;
 	padding: 0.8rem;
+	background: unset;
 	background-color: var(--color-grey-200);
 	color: var(--color-grey-700);
 	border: 1px solid var(--color-grey-300);
