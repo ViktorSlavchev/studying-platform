@@ -1,4 +1,6 @@
 export function isGibberish(text) {
+    return false;
+
     // Normalize input
     const cleaned = text.trim();
 

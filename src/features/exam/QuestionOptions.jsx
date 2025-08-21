@@ -14,16 +14,19 @@ const StyledUl = styled.ul`
 
 const Option = styled.li`
 	cursor: pointer;
+	${({ status }) => status === "completed" && `
+		pointer-events: none;
+	`}
 	width: fit-content;
 `;
 
-function QuestionOptions({ question, answer, onAnswer }) {
+function QuestionOptions({ question, answer, onAnswer, status }) {
 	return (
 		<div>
 			<Text>{question.question}</Text>
 			<StyledUl>
 				{question.options.map((option, index) => (
-					<Option key={index} onClick={() => onAnswer(option)}>
+					<Option key={index} onClick={() => onAnswer(option)} status={status}>
 						<Text>
 							<Letter ind={index} $highlight={answer === option ? "true" : "false"} /> {option}
 						</Text>

@@ -81,7 +81,7 @@ function QuestionQuotes({ quotes, answers, setAnswers, status }) {
 					<Text style={{ marginBottom: "0.5rem" }}>
 						<MultipleLines text={q.quote} />
 					</Text>
-					<InputAutofill value={values?.[idx] || ""} onChange={(val) => handleChange(idx, val)} list={litTopics} style={{ width: "100%", gridColumn: "2 / 3" }} />
+					<InputAutofill value={values?.[idx] || ""} onChange={(val) => handleChange(idx, val)} list={litTopics} style={{ width: "100%", gridColumn: "2 / 3", pointerEvents: status === "completed" ? "none" : "auto" }} />
 					{status === "completed" && myAnswers?.[idx]?.points === 0 && (
 						<Text style={{ gridColumn: "2/3", marginTop: "0.2rem" }} $weight="bold">
 							Правилен отговор: {myAnswers[idx].correctAnswer}{" "}
