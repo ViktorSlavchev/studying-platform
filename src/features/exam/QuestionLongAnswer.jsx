@@ -53,6 +53,8 @@ function QuestionLongAnswer({ question, answers, setAnswers, status }) {
 	}, [answers, question._id]);
 
 	const handleChange = (val) => {
+		if (status === "completed") return;
+
 		setValue(val);
 		if (answers.find((a) => a.questionId === question._id)) {
 			setAnswers((prev) => prev.map((a) => (a.questionId === question._id ? { ...a, answer: val, questionNum: 25 } : a)));
@@ -68,7 +70,7 @@ function QuestionLongAnswer({ question, answers, setAnswers, status }) {
 			<QuoteText>
 				<MultipleLines text={question.quote} />
 			</QuoteText>
-			<LongInput placeholder="Напишете тезата тук ..." value={value || ""} onChange={(e) => handleChange(e.target.value)} />
+			<LongInput placeholder="Напишете тезата тук ..." value={value || ""} onChange={(e) => handleChange(e.target.value)} style={{ pointerEvents: status === "completed" ? "none" : "auto" }} />
 
 			{status === "completed" && question.type !== "reading" && (
 				<Text $weight="bold" $color={points === maxPoints ? "green" : points === 0 ? "red" : "orange"}>

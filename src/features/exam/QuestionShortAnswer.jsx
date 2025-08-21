@@ -10,11 +10,11 @@ const StyledQuestion = styled.div`
 	gap: 1rem;
 `;
 
-function QuestionShortAnswer({ question, answer, onAnswer }) {
+function QuestionShortAnswer({ question, answer, onAnswer, status }) {
 	return (
 		<StyledQuestion>
 			<Text>{question.question}</Text>
-			<Input placeholder="Напишете отговора тук ..." value={answer || ""} onChange={(e) => onAnswer(e.target.value)} />
+			<Input placeholder="Напишете отговора тук ..." value={answer || ""} onChange={(e) => onAnswer(e.target.value)} style={{ pointerEvents: status === "completed" ? "none" : "auto" }} />
 		</StyledQuestion>
 	);
 }
@@ -25,6 +25,7 @@ QuestionShortAnswer.propTypes = {
 	}).isRequired,
 	answer: PropTypes.string,
 	onAnswer: PropTypes.func.isRequired,
+	status: PropTypes.string.isRequired,
 };
 
 export default QuestionShortAnswer;

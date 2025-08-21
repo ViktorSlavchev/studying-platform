@@ -8,10 +8,10 @@ import QuestionReading from "../exam/QuestionReading";
 function QuestionRenderer({ question, answer, onAnswer, status = "in-progress" }) {
 	switch (question.type) {
 		case "options":
-			return <QuestionOptions question={question} answer={answer} onAnswer={onAnswer} />;
+			return <QuestionOptions question={question} answer={answer} onAnswer={onAnswer} status={status} />;
 
 		case "shortAnswer":
-			return <QuestionShortAnswer question={question} answer={answer} onAnswer={onAnswer} />;
+			return <QuestionShortAnswer question={question} answer={answer} onAnswer={onAnswer} status={status} />;
 
 		case "editing":
 			return <QuestionEditing status={status} question={question} answer={answer} onAnswer={onAnswer} />;
